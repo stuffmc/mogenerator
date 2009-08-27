@@ -1,0 +1,18 @@
+<!-- WARNING: This file was machine-generated and might be overwritten. -->
+
+<h1>Editing <$managedObjectClassName.lowercaseString$></h1>
+
+<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
+  <%= f.error_messages %>
+	<$foreach Attribute noninheritedAttributes do$>
+	<p>
+	    <%= f.label :<$Attribute.name$> %><br />
+	    <%= f.text_field :<$Attribute.name$> %>
+  	</p><$endforeach do$>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @<$managedObjectClassName.lowercaseString$> %> |
+<%= link_to 'Back', <$managedObjectClassName.lowercaseString$>_path %>

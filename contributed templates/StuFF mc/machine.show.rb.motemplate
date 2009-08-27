@@ -1,0 +1,17 @@
+<!-- WARNING: This file was machine-generated and might be overwritten. -->
+
+<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
+  <%= f.error_messages %>
+	<$foreach Attribute noninheritedAttributes do$>
+	<p>
+	<p>
+	  <b><$Attribute.name.initialCapitalString$>:</b>
+	  <%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name$> %>
+	</p><$endforeach do$>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(@<$managedObjectClassName.lowercaseString$>) %> |
+<%= link_to 'Back', <$managedObjectClassName.lowercaseString$>_path %>

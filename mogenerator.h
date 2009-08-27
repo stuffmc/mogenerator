@@ -46,7 +46,11 @@
 	NSString				*templateGroup;
 	BOOL					_help;
 	BOOL					_version;
+	int						machineFilesGenerated;
 }
 
 - (NSString*)appSupportFileNamed:(NSString*)fileName_;
+- (NSError*)outputError:(NSError*)error;
+- (BOOL)processEntity:(NSString *)entityClassName forGeneratedMachine:(NSString *)generatedMachine withFileName:(NSString *)fileName;
+
 @end

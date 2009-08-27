@@ -1,0 +1,88 @@
+# DO NOT EDIT. This file is machine-generated and constantly overwritten.
+# Make changes to <$managedObjectClassName$>_controller.rb instead.
+
+class <$managedObjectClassName$>sController < ApplicationController
+  # GET /<$managedObjectClassName.lowercaseString$>
+  # GET /<$managedObjectClassName.lowercaseString$>.xml
+  def index
+    @<$managedObjectClassName.lowercaseString$>s = <$managedObjectClassName$>.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+    end
+  end
+
+  # GET /<$managedObjectClassName.lowercaseString$>s/1
+  # GET /<$managedObjectClassName.lowercaseString$>s/1.xml
+  def show
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+    end
+  end
+
+  # GET /<$managedObjectClassName.lowercaseString$>s/new
+  # GET /<$managedObjectClassName.lowercaseString$>s/new.xml
+  def new
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+    end
+  end
+
+  # GET /<$managedObjectClassName.lowercaseString$>s/1/edit
+  def edit
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+  end
+
+  # POST /<$managedObjectClassName.lowercaseString$>s
+  # POST /<$managedObjectClassName.lowercaseString$>s.xml
+  def create
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new(params[:<$managedObjectClassName.lowercaseString$>])
+
+    respond_to do |format|
+      if @<$managedObjectClassName.lowercaseString$>.save
+        flash[:notice] = '<$managedObjectClassName$> was successfully created.'
+        format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
+        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>, :status => :created, :location => @<$managedObjectClassName.lowercaseString$> }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /<$managedObjectClassName.lowercaseString$>s/1
+  # PUT /<$managedObjectClassName.lowercaseString$>s/1.xml
+  def update
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+
+    respond_to do |format|
+      if @<$managedObjectClassName.lowercaseString$>.update_attributes(params[:<$managedObjectClassName.lowercaseString$>])
+        flash[:notice] = '<$managedObjectClassName$> was successfully updated.'
+        format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /<$managedObjectClassName.lowercaseString$>s/1
+  # DELETE /<$managedObjectClassName.lowercaseString$>s/1.xml
+  def destroy
+    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+    @<$managedObjectClassName.lowercaseString$>.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(<$managedObjectClassName.lowercaseString$>s_url) }
+      format.xml  { head :ok }
+    end
+  end
+end

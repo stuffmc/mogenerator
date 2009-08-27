@@ -1,0 +1,10 @@
+# DO NOT EDIT. This file is machine-generated and constantly overwritten.
+# Make changes to <$managedObjectClassName$>.rb instead.
+
+class <$managedObjectClassName$> < ActiveRecord::Base
+
+	#Associations<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	has_many :<$Relationship.name$><$else$>
+	belongs_to :<$Relationship.name$><$endif$><$endforeach do$>
+	
+end

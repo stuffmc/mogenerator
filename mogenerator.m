@@ -348,8 +348,11 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 	NSFileManager *fm = [NSFileManager defaultManager];
     
-	int machineFilesGenerated = 0;        
+	machineFilesGenerated = 0;        
 	int humanFilesGenerated = 0;
+
+	// !!!:@stuffmc:20090826 - Fixed the "deprecated" uses and checking (and reporting) for error.
+	NSError *error = nil;
 	
 	if (model) {
 		MiscMergeEngine *machineH = engineWithTemplatePath([self appSupportFileNamed:@"machine.h.motemplate"]);
@@ -360,6 +363,31 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		assert(humanH);
 		MiscMergeEngine *humanM = engineWithTemplatePath([self appSupportFileNamed:@"human.m.motemplate"]);
 		assert(humanM);	
+		
+		// !!!:@stuffmc:20090826 - MiscMergeEngine *machineRB - Added support for generating Ruby On Rails template along side Core Data Template
+//		MiscMergeEngine *machineRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.rb.motemplate"]);
+//		assert(machineRB);
+		MiscMergeEngine *machineControllerRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.controller.rb.motemplate"]);
+		assert(machineControllerRB);
+		MiscMergeEngine *machineModelRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.model.rb.motemplate"]);
+		assert(machineModelRB);
+		MiscMergeEngine *machineEditRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.edit.rb.motemplate"]);
+		assert(machineEditRB);
+		MiscMergeEngine *machineIndexRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.index.rb.motemplate"]);
+		assert(machineIndexRB);
+		MiscMergeEngine *machineNewRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.new.rb.motemplate"]);
+		assert(machineNewRB);
+		MiscMergeEngine *machineShowRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.show.rb.motemplate"]);
+		assert(machineShowRB);
+		MiscMergeEngine *machineMigrateRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.migrate.rb.motemplate"]);
+		assert(machineMigrateRB);
+		
+		// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
+		MiscMergeEngine *humanRB = engineWithTemplatePath([self appSupportFileNamed:@"human.rb.motemplate"]);
+		assert(humanRB);
+
+		// --- end @stuffmc
+		
         
 		int entityCount = [[model entities] count];
         
@@ -383,23 +411,45 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			NSString *generatedHumanH = [humanH executeWithObject:entity sender:nil];
 			NSString *generatedHumanM = [humanM executeWithObject:entity sender:nil];
 			
-			BOOL machineDirtied = NO;
+			// !!!:@stuffmc:20090826 - NSString *generatedMachineRB - Added support for generating Ruby On Rails template along side Core Data Template
+			NSString *generatedMachineControllerRB = [machineControllerRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineModelRB = [machineModelRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineEditRB = [machineEditRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineIndexRB = [machineIndexRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineNewRB = [machineNewRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineShowRB = [machineShowRB executeWithObject:entity sender:nil];
+			NSString *generatedMachineMigrateRB = [machineMigrateRB executeWithObject:entity sender:nil];
+
+			// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
+			NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
+			// --- end @stuffmc
+
 			
+			BOOL machineDirtied = NO;
+
 			NSString *machineHFileName = [machineDir stringByAppendingPathComponent:
                 [NSString stringWithFormat:@"_%@.h", entityClassName]];
-			if (![fm regularFileExistsAtPath:machineHFileName] || ![generatedMachineH isEqualToString:[NSString stringWithContentsOfFile:machineHFileName]]) {
-				//	If the file doesn't exist or is different than what we just generated, write it out.
-				[generatedMachineH writeToFile:machineHFileName atomically:NO];
-				machineDirtied = YES;
-				machineFilesGenerated++;
+			if (![fm regularFileExistsAtPath:machineHFileName] || ![generatedMachineH isEqualToString:[NSString stringWithContentsOfFile:machineHFileName encoding:NSUTF8StringEncoding error:&error]]) {
+				if (![self outputError:error]) {
+					//	If the file doesn't exist or is different than what we just generated, write it out.
+					[generatedMachineH writeToFile:machineHFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+					if (![self outputError:error]) {
+						machineDirtied = YES;
+						machineFilesGenerated++;
+					}
+				}
 			}
 			NSString *machineMFileName = [machineDir stringByAppendingPathComponent:
                 [NSString stringWithFormat:@"_%@.m", entityClassName]];
-			if (![fm regularFileExistsAtPath:machineMFileName] || ![generatedMachineM isEqualToString:[NSString stringWithContentsOfFile:machineMFileName]]) {
-				//	If the file doesn't exist or is different than what we just generated, write it out.
-				[generatedMachineM writeToFile:machineMFileName atomically:NO];
-				machineDirtied = YES;
-				machineFilesGenerated++;
+			if (![fm regularFileExistsAtPath:machineMFileName] || ![generatedMachineM isEqualToString:[NSString stringWithContentsOfFile:machineMFileName encoding:NSUTF8StringEncoding error:&error]]) {
+				if (![self outputError:error]) {
+					//	If the file doesn't exist or is different than what we just generated, write it out.
+					[generatedMachineM writeToFile:machineMFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+					if (![self outputError:error]) {
+						machineDirtied = YES;
+						machineFilesGenerated++;
+					}
+				}
 			}
 			NSString *humanHFileName = [humanDir stringByAppendingPathComponent:
                 [NSString stringWithFormat:@"%@.h", entityClassName]];
@@ -407,9 +457,12 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				if (machineDirtied)
 					[fm touchPath:humanHFileName];
 			} else {
-				[generatedHumanH writeToFile:humanHFileName atomically:NO];
-				humanFilesGenerated++;
+				[generatedHumanH writeToFile:humanHFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+				if (![self outputError:error]) {
+					humanFilesGenerated++;
+				}
 			}
+
 			NSString *humanMFileName = [humanDir stringByAppendingPathComponent:
                 [NSString stringWithFormat:@"%@.m", entityClassName]];
 			NSString *humanMMFileName = [humanDir stringByAppendingPathComponent:
@@ -418,13 +471,57 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				//	Allow .mm human files as well as .m files.
 				humanMFileName = humanMMFileName;
 			}
+
+			// !!!:@stuffmc:20090826 - NSString *machineRBFileName - Added support for generating Ruby On Rails template along side Core Data Template
+//			NSString *machineRBFileName = [machineDir stringByAppendingPathComponent:
+//										  [NSString stringWithFormat:@"_%@.rb", entityClassName]];
+//			if (![fm regularFileExistsAtPath:machineRBFileName] || ![generatedMachineRB isEqualToString:[NSString stringWithContentsOfFile:machineRBFileName encoding:NSUTF8StringEncoding error:&error]]) {
+//				if (![self outputError:error]) {
+//					//	If the file doesn't exist or is different than what we just generated, write it out.
+//					[generatedMachineRB writeToFile:machineRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+//					if (![self outputError:error]) {
+//						machineDirtied = YES;
+//						machineFilesGenerated++;
+//					}
+//				}
+//			}
 			
+
+//			ddprintf(@"\nBEFORE PROCESS ENTITY");
+
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineControllerRB withFileName:@"s_controller.rb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineModelRB withFileName:@".rb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineEditRB withFileName:@"/edit.html.erb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineIndexRB withFileName:@"/index.html.erb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineNewRB withFileName:@"/new.html.erb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineShowRB withFileName:@"/show.html.erb"];
+			machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineMigrateRB withFileName:@"migrate"];
+
+//			ddprintf(@"\nAFTER PROCESS ENTITY\n");
+			
+			
+			// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
+			NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
+										[NSString stringWithFormat:@"%@.rb", entityClassName]];
+			if ([fm regularFileExistsAtPath:humanRBFileName]) {
+				if (machineDirtied)
+					[fm touchPath:humanRBFileName];
+			} else {
+				[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+				if (![self outputError:error]) {
+					humanFilesGenerated++;
+				}
+			}
+			// --- end @stuffmc
+
 			if ([fm regularFileExistsAtPath:humanMFileName]) {
 				if (machineDirtied)
 					[fm touchPath:humanMFileName];
 			} else {
-				[generatedHumanM writeToFile:humanMFileName atomically:NO];
-				humanFilesGenerated++;
+				[generatedHumanM writeToFile:humanMFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+				if (![self outputError:error]) {
+					humanFilesGenerated++;
+				}
 			}
 			
 			[mfileContent appendFormat:@"#include \"%@\"\n#include \"%@\"\n",
@@ -433,11 +530,12 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	}
 	
 	if (tempMOMPath) {
-		[fm removeFileAtPath:tempMOMPath handler:nil];
+		[fm removeItemAtPath:tempMOMPath error:&error];
+		[self outputError:error];
 	}
 	bool mfileGenerated = NO;
 	if (mfilePath && ![mfileContent isEqualToString:@""]) {
-		[mfileContent writeToFile:mfilePath atomically:NO];
+		[mfileContent writeToFile:mfilePath atomically:NO encoding:NSUTF8StringEncoding error:&error];
 		mfileGenerated = YES;
 	}
 	
@@ -445,6 +543,76 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		   (mfileGenerated ? "," : " and"), humanFilesGenerated, (mfileGenerated ? " and one include.m file" : ""));
     
     return EXIT_SUCCESS;
+}
+
+// !!!:@stuffmc:20090826 - Checking (and reporting) for error..
+- (NSError*)outputError:(NSError*)error {
+	if (error) {
+		ddprintf(@"\nError occured: %@", error);
+	}
+	return error;
+}
+
+- (BOOL)processEntity:(NSString *)entityClassName forGeneratedMachine:(NSString *)generatedMachine withFileName:(NSString *)fileName {
+
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *machineRBFileName;
+	NSString *machineDirRB = [machineDir stringByAppendingPathComponent:@"app"];
+	NSString *machineDirToCreate = nil;
+	
+	if ([fileName hasPrefix:@"/"]) {
+		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@s", [entityClassName lowercaseString]]];
+	}
+	if ([fileName isEqualToString:@"migrate"]) {
+		machineDirToCreate = [[machineDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
+		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
+		rand(); rand(); rand();
+//		NSLog(@"DATE: %d%02d%02d%.0f", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000));
+		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@s.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), [entityClassName lowercaseString]];
+	}
+
+	if (machineDirToCreate) {
+		if (![fm directoryExistsAtPath:machineDirToCreate]) {
+			// Create the directory if it doesn't exist already
+	//		ddprintf(@"[machineDir stringByAppendingPathComponent:entityClassName]: %@", [machineDir stringByAppendingPathComponent:entityClassName]);
+			if ([fm createDirectoryAtPath:machineDirToCreate attributes:nil]) {
+				machineDirRB = machineDirToCreate;
+			} else {
+				ddprintf(@"\nError while creating %@", machineDirToCreate);
+			}
+		}
+		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
+	} else {
+		if ([fileName containsString:@"controller"]) {
+			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"controllers"];
+		} else {
+			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"models"];
+		}
+		//TODO: Might not work with Rails having a "_" at the beginning...
+//		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"_%@%@", entityClassName, fileName]];
+		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@", [entityClassName lowercaseString], fileName]];
+//		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
+	}
+
+	
+//	ddprintf(@"\n%s -- entityClassName = %@ -- machineRBFileName = %@", _cmd, entityClassName, machineRBFileName);
+	NSError *error = nil;
+	BOOL machineDirtied = NO;
+	
+	if (![fm regularFileExistsAtPath:machineRBFileName] || ![generatedMachine isEqualToString:[NSString stringWithContentsOfFile:machineRBFileName encoding:NSUTF8StringEncoding error:&error]]) {
+		if (![self outputError:error]) {
+//			ddprintf(@"\nAFTER 1st error");
+			//	If the file doesn't exist or is different than what we just generated, write it out.
+			[generatedMachine writeToFile:machineRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+//			if (![self outputError:error]) {
+			if (true) {
+//				ddprintf(@"\nAFTER 2nd error");
+				machineDirtied = YES;
+				machineFilesGenerated++;
+			}
+		}
+	}
+	return machineDirtied;
 }
 
 @end

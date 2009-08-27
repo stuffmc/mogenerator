@@ -1,0 +1,24 @@
+<!-- WARNING: This file was machine-generated and might be overwritten. -->
+
+<h1>Listing <$managedObjectClassName.lowercaseString$></h1>
+
+<table>
+  <tr>
+	<$foreach Attribute noninheritedAttributes do$><th><$Attribute.name.initialCapitalString$></th>
+	<$endforeach do$>
+  </tr>
+
+<% @movies.each do |<$managedObjectClassName.lowercaseString$>| %>
+  <tr>
+	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name$> %></td>
+	<$endforeach do$>
+    <td><%= link_to 'Show', <$managedObjectClassName.lowercaseString$> %></td>
+    <td><%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(<$managedObjectClassName.lowercaseString$>) %></td>
+    <td><%= link_to 'Destroy', <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New <$managedObjectClassName.lowercaseString$>', new_<$managedObjectClassName.lowercaseString$>_path %>

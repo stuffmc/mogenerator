@@ -1,0 +1,14 @@
+class Create<$managedObjectClassName$>s < ActiveRecord::Migration
+  def self.up
+    create_table :<$managedObjectClassName.lowercaseString$>s do |t|
+		t.integer :<$managedObjectClassName.lowercaseString$>_id<$foreach Attribute noninheritedAttributes do$>
+	    t.string :<$Attribute.name.lowercaseString$><$endforeach do$>
+
+	    t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :<$managedObjectClassName.lowercaseString$>s
+  end
+end

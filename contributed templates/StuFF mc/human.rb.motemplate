@@ -1,0 +1,5 @@
+class <$managedObjectClassName$> < _<$managedObjectClassName$>
+
+	# Custom logic goes here.
+	
+end
