@@ -11,4 +11,4 @@
 <% end %>
 
 <%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(@<$managedObjectClassName.lowercaseString$>) %> |
-<%= link_to 'Back', <$managedObjectClassName.lowercaseString$>s_path %>
+<%= link_to 'Back', <$managedObjectClassName.lowercaseString.pluralize$>_path %>

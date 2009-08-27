@@ -6,6 +6,7 @@
 	***************************************************************************/
 
 #import "mogenerator.h"
+#import "ActiveSupportInflector.h"
 
 NSString	*gCustomBaseClass;
 
@@ -34,6 +35,7 @@ NSString	*gCustomBaseClass;
 		[result removeObjectsInArray:[[superentity attributesByName] allValues]];
 		return result;
 	} else {
+//		ddprintf(@"\n[[self attributesByName] allValues]: %@", [[self attributesByName] allValues]);
 		return [[self attributesByName] allValues];
 	}
 }
@@ -127,9 +129,21 @@ NSString	*gCustomBaseClass;
 	}
 	return result;
 }
+
+
+
 @end
 
 @implementation NSAttributeDescription (scalarAttributeType)
+//- (NSString*)pluralize {
+////	ddprintf(@"\nplural of person is %@ and singular of people is %@", [inflector pluralize:@"person"], [inflector singularize:@"people"]);
+//	// TODO: Use the same for NSAttributeDescription & NSEntityDescription  Get the appSuportFileName AND Pass the inflector, *DO NOT* initialize it everytime. Time pressure right now :(
+////	NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
+//	NSString *path = @"/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc/ActiveSupportInflector/ActiveSupportInflector.plist";
+//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
+//	return [inflector pluralize:[self name]];
+//}
+
 - (BOOL)hasScalarAttributeType {
 	switch ([self attributeType]) {
 		case NSInteger16AttributeType:
@@ -169,9 +183,8 @@ NSString	*gCustomBaseClass;
 	}
 }
 - (BOOL)isTimeStamp {
-	ddprintf(@"attributeValueClassName: %@", [self attributeValueClassName]);
-	return YES;
-//	return [self attributeValueClassName
+	// This allows the templates to check for the "timestamp" fields used by Rails and thus, not display them.
+	return ([[self name] isEqualToString:@"createdAt"] || [[self name] isEqualToString:@"updatedAt"]);
 }
 - (BOOL)hasDefinedAttributeType {
 	return [self attributeType] != NSUndefinedAttributeType;
@@ -383,6 +396,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *humanRB;
 		
 		if (railsDir) {
+//			NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
+//			inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
+
 			machineControllerRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.controller.rb.motemplate"]);
 			assert(machineControllerRB);
 			machineModelRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.model.rb.motemplate"]);
@@ -425,21 +441,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			NSString *generatedMachineM = [machineM executeWithObject:entity sender:nil];
 			NSString *generatedHumanH = [humanH executeWithObject:entity sender:nil];
 			NSString *generatedHumanM = [humanM executeWithObject:entity sender:nil];
-			
-			// !!!:@stuffmc:20090826 - NSString *generatedMachineRB - Added support for generating Ruby On Rails template along side Core Data Template
-			if (railsDir) {
-//				NSString *generatedMachineControllerRB = [machineControllerRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineModelRB = [machineModelRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineEditRB = [machineEditRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineIndexRB = [machineIndexRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineNewRB = [machineNewRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineShowRB = [machineShowRB executeWithObject:entity sender:nil];
-//				NSString *generatedMachineMigrateRB = [machineMigrateRB executeWithObject:entity sender:nil];
-//
-//				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//				NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
-			}
-			// --- end @stuffmc
 			
 			BOOL machineDirtied = NO;
 
@@ -488,31 +489,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				humanMFileName = humanMMFileName;
 			}
 
-			// !!!:@stuffmc:20090826 - NSString *machineRBFileName - Added support for generating Ruby On Rails template along side Core Data Template
-			if (railsDir) {
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineControllerRB withFileName:@"s_controller.rb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineModelRB withFileName:@".rb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineEditRB withFileName:@"/edit.html.erb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineIndexRB withFileName:@"/index.html.erb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineNewRB withFileName:@"/new.html.erb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineShowRB withFileName:@"/show.html.erb"];
-//				machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineMigrateRB withFileName:@"migrate"];
-//
-//				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//				NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
-//											 [NSString stringWithFormat:@"%@.rb", entityClassName]];
-//				if ([fm regularFileExistsAtPath:humanRBFileName]) {
-//					if (machineDirtied)
-//						[fm touchPath:humanRBFileName];
-//				} else {
-//					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-//					if (![self outputError:error]) {
-//						humanFilesGenerated++;
-//					}
-//				}
-				// --- end @stuffmc
-			}
-
 			if ([fm regularFileExistsAtPath:humanMFileName]) {
 				if (machineDirtied)
 					[fm touchPath:humanMFileName];
@@ -527,8 +503,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
                 [humanMFileName lastPathComponent], [machineMFileName lastPathComponent]];
 			
 			if (railsDir) {
-				ddprintf(@"\nrails machineControllerRB: %@", machineControllerRB);
-				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"s_controller.rb"];
+//				ddprintf(@"\nrails machineControllerRB: %@", machineControllerRB);
+				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"_controller.rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineEditRB		withFileName:@"/edit.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineIndexRB		withFileName:@"/index.html.erb"];
@@ -536,6 +512,11 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineShowRB		withFileName:@"/show.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
 
+				//	- (void) setUp {
+				//		[self setInflector:[[[ActiveSupportInflector alloc] init] autorelease]];
+				//	}
+				//	
+				//	- (void) testPluralizationAndSingularization {
 				
 				
 				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
@@ -572,63 +553,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
     return EXIT_SUCCESS;
 }
 
-//- (void)runRails {
-//	MiscMergeEngine *machineControllerRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.controller.rb.motemplate"]);
-//	assert(machineControllerRB);
-//	MiscMergeEngine *machineModelRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.model.rb.motemplate"]);
-//	assert(machineModelRB);
-//	MiscMergeEngine *machineEditRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.edit.rb.motemplate"]);
-//	assert(machineEditRB);
-//	MiscMergeEngine *machineIndexRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.index.rb.motemplate"]);
-//	assert(machineIndexRB);
-//	MiscMergeEngine *machineNewRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.new.rb.motemplate"]);
-//	assert(machineNewRB);
-//	MiscMergeEngine *machineShowRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.show.rb.motemplate"]);
-//	assert(machineShowRB);
-//	MiscMergeEngine *machineMigrateRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.migrate.rb.motemplate"]);
-//	assert(machineMigrateRB);
-//	
-//	// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//	MiscMergeEngine *humanRB = engineWithTemplatePath([self appSupportFileNamed:@"human.rb.motemplate"]);
-//	assert(humanRB);
-//	
-//	
-//	
-//	NSString *generatedMachineControllerRB = [machineControllerRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineModelRB = [machineModelRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineEditRB = [machineEditRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineIndexRB = [machineIndexRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineNewRB = [machineNewRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineShowRB = [machineShowRB executeWithObject:entity sender:nil];
-//	NSString *generatedMachineMigrateRB = [machineMigrateRB executeWithObject:entity sender:nil];
-//	
-//	// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//	NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
-//
-//	
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineControllerRB withFileName:@"s_controller.rb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineModelRB withFileName:@".rb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineEditRB withFileName:@"/edit.html.erb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineIndexRB withFileName:@"/index.html.erb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineNewRB withFileName:@"/new.html.erb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineShowRB withFileName:@"/show.html.erb"];
-//	machineDirtied = [self processEntity:entityClassName forGeneratedMachine:generatedMachineMigrateRB withFileName:@"migrate"];
-//	
-//	// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//	NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
-//								 [NSString stringWithFormat:@"%@.rb", entityClassName]];
-//	if ([fm regularFileExistsAtPath:humanRBFileName]) {
-//		if (machineDirtied)
-//			[fm touchPath:humanRBFileName];
-//	} else {
-//		[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-//		if (![self outputError:error]) {
-//			humanFilesGenerated++;
-//		}
-//	}
-//	
-//}
-
 // !!!:@stuffmc:20090826 - Checking (and reporting) for error..
 - (NSError*)outputError:(NSError*)error {
 	if (error) {
@@ -639,10 +563,10 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 - (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 
-	NSString *entityClassName = [entity managedObjectClassName];
+	NSString *entityClassName = [[entity managedObjectClassName] lowercaseString];
 	NSString *generatedMachine = [machine executeWithObject:entity sender:nil];
 
-	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
+//	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
 
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *machineRBFileName;
@@ -650,14 +574,15 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	NSString *machineDirToCreate = nil;
 	
 	if ([fileName hasPrefix:@"/"]) {
-		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@s", [entityClassName lowercaseString]]];
+//		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@s", [entityClassName lowercaseString]]];
+		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[entityClassName pluralize]];
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
 		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
 		rand(); rand(); rand();
 //		NSLog(@"DATE: %d%02d%02d%.0f", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000));
-		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@s.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), [entityClassName lowercaseString]];
+		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), [entityClassName pluralize]];
 	}
 
 	if (machineDirToCreate) {
@@ -674,12 +599,14 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	} else {
 		if ([fileName containsString:@"controller"]) {
 			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"controllers"];
+//			ddprintf(@"\n entityClassName: %@ = %@", entityClassName, [entityClassName pluralize]);
+			entityClassName = [entityClassName pluralize];
 		} else {
 			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"models"];
 		}
 		//TODO: Might not work with Rails having a "_" at the beginning...
 //		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"_%@%@", entityClassName, fileName]];
-		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@", [entityClassName lowercaseString], fileName]];
+		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@", entityClassName, fileName]];
 //		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
 	}
 
@@ -693,8 +620,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 //			ddprintf(@"\nAFTER 1st error");
 			//	If the file doesn't exist or is different than what we just generated, write it out.
 			[generatedMachine writeToFile:machineRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-//			if (![self outputError:error]) {
-			if (true) {
+			if (![self outputError:error]) {
+//			if (true) {
 //				ddprintf(@"\nAFTER 2nd error");
 				machineDirtied = YES;
 				machineFilesGenerated++;

@@ -11,6 +11,8 @@
 		55200E970C49FEEA00018A42 /* DDCliUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200E920C49FEEA00018A42 /* DDCliUtil.m */; };
 		55200E980C49FEEA00018A42 /* DDGetoptLongParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200E950C49FEEA00018A42 /* DDGetoptLongParser.m */; };
 		55200F9D0C4A2CA800018A42 /* DDCliParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200F9C0C4A2CA800018A42 /* DDCliParseException.m */; };
+		6A57FC671046B768008D0A90 /* ActiveSupportInflector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A57FC631046B768008D0A90 /* ActiveSupportInflector.m */; };
+		6A57FCE81046C1A6008D0A90 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A57FCAA1046BB65008D0A90 /* RegexKitLite.m */; };
 		79D2BF3F0ACFB25B00F3F141 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79D2BF3E0ACFB25B00F3F141 /* CoreData.framework */; };
 		79D2BFA20ACFB51A00F3F141 /* _MiscMergeBreakCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BF530ACFB51A00F3F141 /* _MiscMergeBreakCommand.m */; };
 		79D2BFA40ACFB51A00F3F141 /* _MiscMergeCallCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D2BF550ACFB51A00F3F141 /* _MiscMergeCallCommand.m */; };
@@ -69,6 +71,12 @@
 		55200E950C49FEEA00018A42 /* DDGetoptLongParser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = DDGetoptLongParser.m; sourceTree = "<group>"; };
 		55200F9B0C4A2CA800018A42 /* DDCliParseException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DDCliParseException.h; sourceTree = "<group>"; };
 		55200F9C0C4A2CA800018A42 /* DDCliParseException.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = DDCliParseException.m; sourceTree = "<group>"; };
+		6A57FC621046B768008D0A90 /* ActiveSupportInflector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActiveSupportInflector.h; sourceTree = "<group>"; };
+		6A57FC631046B768008D0A90 /* ActiveSupportInflector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActiveSupportInflector.m; sourceTree = "<group>"; };
+		6A57FC641046B768008D0A90 /* ActiveSupportInflector.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = ActiveSupportInflector.plist; sourceTree = "<group>"; };
+		6A57FC981046BA6F008D0A90 /* Unit Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Unit Test-Info.plist"; sourceTree = "<group>"; };
+		6A57FCA91046BB65008D0A90 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		6A57FCAA1046BB65008D0A90 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		79A586510E48E8B400474C35 /* mogenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mogenerator.h; sourceTree = "<group>"; };
 		79D2BF3E0ACFB25B00F3F141 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		79D2BF520ACFB51A00F3F141 /* _MiscMergeBreakCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = _MiscMergeBreakCommand.h; path = ../MiscMerge/_MiscMergeBreakCommand.h; sourceTree = "<group>"; };
@@ -177,6 +185,7 @@
 				55200E8E0C49FEEA00018A42 /* ddcli */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				6A57FC981046BA6F008D0A90 /* Unit Test-Info.plist */,
 			);
 			name = mogenerator;
 			sourceTree = "<group>";
@@ -197,6 +206,7 @@
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				6A57FC391046B767008D0A90 /* ActiveSupportInflector */,
 				79D2BF3E0ACFB25B00F3F141 /* CoreData.framework */,
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
 			);
@@ -225,6 +235,19 @@
 				55200E950C49FEEA00018A42 /* DDGetoptLongParser.m */,
 			);
 			path = ddcli;
+			sourceTree = "<group>";
+		};
+		6A57FC391046B767008D0A90 /* ActiveSupportInflector */ = {
+			isa = PBXGroup;
+			children = (
+				6A57FCA91046BB65008D0A90 /* RegexKitLite.h */,
+				6A57FCAA1046BB65008D0A90 /* RegexKitLite.m */,
+				6A57FC621046B768008D0A90 /* ActiveSupportInflector.h */,
+				6A57FC631046B768008D0A90 /* ActiveSupportInflector.m */,
+				6A57FC641046B768008D0A90 /* ActiveSupportInflector.plist */,
+			);
+			name = ActiveSupportInflector;
+			path = "contributed templates/StuFF mc/ActiveSupportInflector";
 			sourceTree = "<group>";
 		};
 		79D2BF510ACFB51000F3F141 /* MiscMerge */ = {
@@ -400,6 +423,8 @@
 				55200E970C49FEEA00018A42 /* DDCliUtil.m in Sources */,
 				55200E980C49FEEA00018A42 /* DDGetoptLongParser.m in Sources */,
 				55200F9D0C4A2CA800018A42 /* DDCliParseException.m in Sources */,
+				6A57FC671046B768008D0A90 /* ActiveSupportInflector.m in Sources */,
+				6A57FCE81046C1A6008D0A90 /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +443,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = mogenerator_Prefix.pch;
 				INSTALL_PATH = "$(HOME)/bin";
+				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = mogenerator;
 				ZERO_LINK = YES;
 			};

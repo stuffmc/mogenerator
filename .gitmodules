@@ -1,3 +1,7 @@
 [submodule "Xmod/JRSwizzle"]
 	path = Xmod/JRSwizzle
 	url = git://github.com/rentzsch/jrswizzle.git
+
+[submodule "contributed templates/StuFF mc/ActiveSupportInflector"]
+	path = contributed templates/StuFF mc/ActiveSupportInflector
+	url = git://github.com/stuffmc/ActiveSupportInflector.git

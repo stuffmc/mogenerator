@@ -15,8 +15,10 @@
 #import "nsenumerate.h"
 #import "NSString+MiscAdditions.h"
 #import "DDCommandLineInterface.h"
+//@class ActiveSupportInflector;
 
 @interface NSEntityDescription (customBaseClass)
+//- (NSString*)pluralize;
 - (BOOL)hasCustomSuperentity;
 - (NSString*)customSuperentity;
 - (void)_processPredicate:(NSPredicate*)predicate_ bindings:(NSMutableArray*)bindings_;
@@ -24,6 +26,8 @@
 @end
 
 @interface NSAttributeDescription (scalarAttributeType)
+//- (NSString*)pluralize;
+- (BOOL)isTimeStamp;
 - (BOOL)hasScalarAttributeType;
 - (NSString*)scalarAttributeType;
 - (BOOL)hasDefinedAttributeType;
@@ -48,13 +52,11 @@
 	BOOL					_help;
 	BOOL					_version;
 	int						machineFilesGenerated;
+//	ActiveSupportInflector	*inflector;
 }
 
 - (NSString*)appSupportFileNamed:(NSString*)fileName_;
 - (NSError*)outputError:(NSError*)error;
-//- (BOOL)processEntity:(NSString *)entityClassName forGeneratedMachine:(NSString *)generatedMachine withFileName:(NSString *)fileName;
 - (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName;
-- (void)runRails;
-- (BOOL)isTimeStamp;
 
 @end
