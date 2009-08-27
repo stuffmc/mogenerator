@@ -9,11 +9,11 @@
 	<$foreach Attribute noninheritedAttributes do$>
 	<p>
 	    <%= f.label :<$Attribute.name$> %><br />
-	    <%= f.text_field :<$Attribute.name$> %>
+	    <%= f.text_field :<$Attribute.name.lowercaseString$> %>
 	</p><$endforeach do$>
   <p>
     <%= f.submit 'Create' %>
   </p>
 <% end %>
 
-<%= link_to 'Back', <$managedObjectClassName.lowercaseString$>_path %>
+<%= link_to 'Back', <$managedObjectClassName.lowercaseString$>s_path %>

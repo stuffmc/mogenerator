@@ -8,9 +8,9 @@
 	<$endforeach do$>
   </tr>
 
-<% @movies.each do |<$managedObjectClassName.lowercaseString$>| %>
+<% @<$managedObjectClassName.lowercaseString$>s.each do |<$managedObjectClassName.lowercaseString$>| %>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name$> %></td>
+	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.lowercaseString$> %></td>
 	<$endforeach do$>
     <td><%= link_to 'Show', <$managedObjectClassName.lowercaseString$> %></td>
     <td><%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(<$managedObjectClassName.lowercaseString$>) %></td>
