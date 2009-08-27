@@ -9,7 +9,7 @@ class <$managedObjectClassName$>sController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>s }
     end
   end
 

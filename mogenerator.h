@@ -40,6 +40,7 @@
 	NSString				*baseClass;
 	NSString				*includem;
 	NSString				*templatePath;
+	NSString				*railsDir;
 	NSString				*outputDir;
 	NSString				*machineDir;
 	NSString				*humanDir;
@@ -51,6 +52,9 @@
 
 - (NSString*)appSupportFileNamed:(NSString*)fileName_;
 - (NSError*)outputError:(NSError*)error;
-- (BOOL)processEntity:(NSString *)entityClassName forGeneratedMachine:(NSString *)generatedMachine withFileName:(NSString *)fileName;
+//- (BOOL)processEntity:(NSString *)entityClassName forGeneratedMachine:(NSString *)generatedMachine withFileName:(NSString *)fileName;
+- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName;
+- (void)runRails;
+- (BOOL)isTimeStamp;
 
 @end

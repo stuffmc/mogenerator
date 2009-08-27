@@ -8,9 +8,6 @@
 	  <b><$Attribute.name.initialCapitalString$>:</b>
 	  <%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.lowercaseString$> %>
 	</p><$endforeach do$>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
 <% end %>
 
 <%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(@<$managedObjectClassName.lowercaseString$>) %> |
