@@ -1,6 +1,6 @@
 <!-- WARNING: This file was machine-generated and might be overwritten. -->
 
-<h1>Listing <$managedObjectClassName.lowercaseString$></h1>
+<h1>Listing <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$></h1>
 
 <table>
   <tr>

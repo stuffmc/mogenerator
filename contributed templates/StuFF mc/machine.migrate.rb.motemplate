@@ -1,6 +1,6 @@
-class Create<$managedObjectClassName$>s < ActiveRecord::Migration
+class Create<$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$> < ActiveRecord::Migration
   def self.up
-    create_table :<$managedObjectClassName.lowercaseString$>s do |t|
+    create_table :<$managedObjectClassName.lowercaseString.pluralize$> do |t|
 		t.integer :<$managedObjectClassName.lowercaseString$>_id<$foreach Attribute noninheritedAttributes do$>
 	    t.string :<$Attribute.name.lowercaseString$><$endforeach do$>
 
@@ -9,6 +9,6 @@ class Create<$managedObjectClassName$>s < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :<$managedObjectClassName.lowercaseString$>s
+    drop_table :<$managedObjectClassName.lowercaseString.pluralize$>
   end
 end

@@ -32,6 +32,8 @@ enum
 
 @interface NSString (MiscAdditions)
 
+- (NSString*)pluralize;
+
 /*" Trimming whitespace "*/
 - (id)stringByTrimmingLeadWhitespace;
 - (id)stringByTrimmingTailWhitespace;

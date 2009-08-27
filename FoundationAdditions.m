@@ -33,7 +33,6 @@
 #import <Foundation/Foundation.h>
 #import "NSString+MiscAdditions.h"
 
-
 /* Writes to stderr */
 void ErrVPrintf(NSString *format, va_list arguments)
 {

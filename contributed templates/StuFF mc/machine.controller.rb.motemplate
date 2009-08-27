@@ -1,7 +1,7 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
 # Make changes to <$managedObjectClassName$>_controller.rb instead.
 
-class <$managedObjectClassName$>sController < ApplicationController
+class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>Controller < ApplicationController
   # GET /<$managedObjectClassName.lowercaseString$>
   # GET /<$managedObjectClassName.lowercaseString$>.xml
   def index

@@ -18,7 +18,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSData.h>
 #import <stdlib.h>  //NULL os OSXPB
-
+#import "ActiveSupportInflector.h"
 
 @implementation NSCharacterSet (MiscAdditions)
 
@@ -430,6 +430,19 @@ static NSRange _nextSearchRange(NSString *string, unsigned mask,
     }
 
     return stringCount;
+}
+
+
+- (NSString*)pluralize {
+	//	ddprintf(@"\nplural of person is %@ and singular of people is %@", [inflector pluralize:@"person"], [inflector singularize:@"people"]);
+	// TODO: Get the appSuportFileName AND Pass the inflector, *DO NOT* initialize it everytime. Time pressure right now :(
+	//	NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
+	NSString *path = @""; // @"/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc/ActiveSupportInflector/ActiveSupportInflector.plist";
+//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
+//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] init] autorelease];
+	ActiveSupportInflector *inflector = [ActiveSupportInflector sharedInflector];
+	return [inflector pluralize:self];
+//	return @"PLUUUUURAL";
 }
 
 - (NSRange)rangeOfString:(NSString *)aString occurrenceNum:(int)n
