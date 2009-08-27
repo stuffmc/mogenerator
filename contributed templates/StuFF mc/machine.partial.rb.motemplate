@@ -1,0 +1,16 @@
+<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
+  <%= f.error_messages %>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
+	<p>
+	    <%= f.label :<$Attribute.name$> %><br />
+	    <%= f.text_field :<$Attribute.name.lowercaseString$> %>
+  	</p><$endif$><$endforeach do$>
+
+	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	<p><a href="javascript:alert('hello world! (a.k.a. this not yet implemented)')">add</a> <$Relationship.name$></p><$else$>
+	<p><$Relationship.name$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
+	</p><$endif$><$endforeach do$>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>

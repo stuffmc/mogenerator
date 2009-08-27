@@ -2,17 +2,7 @@
 
 <h1>Editing <$managedObjectClassName.lowercaseString$></h1>
 
-<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
-  <%= f.error_messages %>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
-	<p>
-	    <%= f.label :<$Attribute.name$> %><br />
-	    <%= f.text_field :<$Attribute.name.lowercaseString$> %>
-  	</p><$endif$><$endforeach do$>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 
 <%= link_to 'Show', @<$managedObjectClassName.lowercaseString$> %> |
 <%= link_to 'Back', <$managedObjectClassName.lowercaseString.pluralize$>_path %>

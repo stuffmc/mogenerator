@@ -388,6 +388,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		// !!!:@stuffmc:20090826 - MiscMergeEngine *machineRB - Added support for generating Ruby On Rails template along side Core Data Template
 		MiscMergeEngine *machineControllerRB;
 		MiscMergeEngine *machineModelRB;
+		MiscMergeEngine *machinePartialRB;
 		MiscMergeEngine *machineEditRB;
 		MiscMergeEngine *machineIndexRB;
 		MiscMergeEngine *machineNewRB;
@@ -399,10 +400,13 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 //			NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
 //			inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
 
+			// TODO: MiscMergeEngine, list of templates, ... in an NSArray and some kind of plist describing the template structure.
 			machineControllerRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.controller.rb.motemplate"]);
 			assert(machineControllerRB);
 			machineModelRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.model.rb.motemplate"]);
 			assert(machineModelRB);
+			machinePartialRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.partial.rb.motemplate"]);
+			assert(machinePartialRB);
 			machineEditRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.edit.rb.motemplate"]);
 			assert(machineEditRB);
 			machineIndexRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.index.rb.motemplate"]);
@@ -506,6 +510,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 //				ddprintf(@"\nrails machineControllerRB: %@", machineControllerRB);
 				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"_controller.rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
+				machineDirtied = [self processEntity:entity forMachine:machinePartialRB		withFileName:@"/_.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineEditRB		withFileName:@"/edit.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineIndexRB		withFileName:@"/index.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineNewRB			withFileName:@"/new.html.erb"];
@@ -594,6 +599,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			} else {
 				ddprintf(@"\nError while creating %@", machineDirToCreate);
 			}
+		}
+		if ([fileName hasPrefix:@"/_"])	{
+			fileName = [NSString stringWithFormat:@"/_%@%@", entityClassName, [fileName substringFromIndex:2]];
 		}
 		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
 	} else {
