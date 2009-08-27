@@ -527,6 +527,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
                 [humanMFileName lastPathComponent], [machineMFileName lastPathComponent]];
 			
 			if (railsDir) {
+				ddprintf(@"\nrails machineControllerRB: %@", machineControllerRB);
 				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"s_controller.rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineEditRB		withFileName:@"/edit.html.erb"];
@@ -538,18 +539,18 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				
 				
 				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-				NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
-				NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
-											 [NSString stringWithFormat:@"%@.rb", entityClassName]];
-				if ([fm regularFileExistsAtPath:humanRBFileName]) {
-					if (machineDirtied)
-						[fm touchPath:humanRBFileName];
-				} else {
-					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-					if (![self outputError:error]) {
-						humanFilesGenerated++;
-					}
-				}
+//				NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
+//				NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
+//											 [NSString stringWithFormat:@"%@.rb", entityClassName]];
+//				if ([fm regularFileExistsAtPath:humanRBFileName]) {
+//					if (machineDirtied)
+//						[fm touchPath:humanRBFileName];
+//				} else {
+//					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+//					if (![self outputError:error]) {
+//						humanFilesGenerated++;
+//					}
+//				}
 				
 			}
 		}
@@ -640,6 +641,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 	NSString *entityClassName = [entity managedObjectClassName];
 	NSString *generatedMachine = [machine executeWithObject:entity sender:nil];
+
+	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
 
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *machineRBFileName;
