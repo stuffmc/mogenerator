@@ -30,6 +30,8 @@
 - (BOOL)isTimeStamp;
 - (BOOL)hasScalarAttributeType;
 - (NSString*)scalarAttributeType;
+- (NSString*)railsAttributeType;
+- (NSString*)railsHTMLFormType;
 - (BOOL)hasDefinedAttributeType;
 - (NSString*)objectAttributeType;
 @end

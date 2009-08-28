@@ -182,6 +182,55 @@ NSString	*gCustomBaseClass;
 			return nil;
 	}
 }
+- (NSString*)railsAttributeType {
+	switch ([self attributeType]) {
+		case NSInteger16AttributeType:
+		case NSInteger32AttributeType:
+		case NSInteger64AttributeType:
+			return @"integer";
+			break;
+		case NSDoubleAttributeType:
+		case NSDecimalAttributeType:
+			return @"decimal";
+			break;
+		case NSBooleanAttributeType:
+			return @"boolean";
+			break;
+		case NSStringAttributeType:
+			return @"string"; // @"text"
+			break;
+		case NSDateAttributeType:
+			return @"datetime"; // @"date", @"time"? @"timestamp"
+			break;
+		case NSBinaryDataAttributeType:
+			return @"binary";
+		default:
+			return [self scalarAttributeType];	// NSFloatAttributeType is also "float" in rails. NSTransformableAttributeType will then return nil.
+	}
+}
+- (NSString*)railsHTMLFormType {
+	if ([self attributeType] != NSTransformableAttributeType) {
+		
+	}
+	switch ([self attributeType]) {
+		case NSBooleanAttributeType:
+			return @"check_box";
+			break;
+		case NSBinaryDataAttributeType:
+			return @"file_field";
+		default:
+			//		case NSInteger16AttributeType:
+			//		case NSInteger32AttributeType:
+			//		case NSInteger64AttributeType:
+			//		case NSDoubleAttributeType:
+			//		case NSFloatAttributeType:
+			//		case NSDecimalAttributeType:
+			//		case NSDateAttributeType:
+			//		case NSStringAttributeType:
+			return @"text_field"; // @"text_area" for @"text"
+			break;
+	}
+}
 - (BOOL)isTimeStamp {
 	// This allows the templates to check for the "timestamp" fields used by Rails and thus, not display them.
 	return ([[self name] isEqualToString:@"createdAt"] || [[self name] isEqualToString:@"updatedAt"]);
@@ -300,6 +349,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
            "  -O, --output-dir DIR          Output directory\n"
            "  -M, --machine-dir DIR         Output directory for machine files\n"
            "  -H, --human-dir DIR           Output director for human files\n"
+		   // @stuffmc added support for Ruby On Rails generation on Augst 26, 2009.
            "  -R, --rails-dir DIR		Location of the already created Rails App's {RAILS_ROOT}\n"
            "      --version                 Display version and exit\n"
            "  -h, --help                    Display this help and exit\n"
@@ -517,13 +567,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineShowRB		withFileName:@"/show.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
 
-				//	- (void) setUp {
-				//		[self setInflector:[[[ActiveSupportInflector alloc] init] autorelease]];
-				//	}
-				//	
-				//	- (void) testPluralizationAndSingularization {
-				
-				
 				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
 //				NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
 //				NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
@@ -579,7 +622,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	NSString *machineDirToCreate = nil;
 	
 	if ([fileName hasPrefix:@"/"]) {
-//		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@s", [entityClassName lowercaseString]]];
 		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[entityClassName pluralize]];
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
@@ -629,7 +671,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			//	If the file doesn't exist or is different than what we just generated, write it out.
 			[generatedMachine writeToFile:machineRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
 			if (![self outputError:error]) {
-//			if (true) {
 //				ddprintf(@"\nAFTER 2nd error");
 				machineDirtied = YES;
 				machineFilesGenerated++;

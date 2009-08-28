@@ -1,4 +1,5 @@
 <!-- WARNING: This file was machine-generated and might be overwritten. -->
+<% partial_button 'Update <$managedObjectClassName.lowercaseString$>' %>
 
 <h1>Editing <$managedObjectClassName.lowercaseString$></h1>
 

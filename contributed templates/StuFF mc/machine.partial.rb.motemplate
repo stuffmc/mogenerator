@@ -3,7 +3,7 @@
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
 	<p>
 	    <%= f.label :<$Attribute.name$> %><br />
-	    <%= f.text_field :<$Attribute.name.lowercaseString$> %>
+	    <%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.lowercaseString$> %>
   	</p><$endif$><$endforeach do$>
 
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
@@ -11,6 +11,6 @@
 	<p><$Relationship.name$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
 	</p><$endif$><$endforeach do$>
   <p>
-    <%= f.submit 'Update' %>
+    <%= f.submit yield(:button) %>
   </p>
 <% end %>
