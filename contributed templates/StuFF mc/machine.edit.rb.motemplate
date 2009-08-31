@@ -1,9 +1,9 @@
 <!-- WARNING: This file was machine-generated and might be overwritten. -->
 <% partial_button 'Update <$managedObjectClassName.lowercaseString$>' %>
 
-<h1>Editing <$managedObjectClassName.lowercaseString$></h1>
+<h1>Editing <$managedObjectClassName.sentencize$></h1>
 
 <%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 
-<%= link_to 'Show', @<$managedObjectClassName.lowercaseString$> %> |
-<%= link_to 'Back', <$managedObjectClassName.lowercaseString.pluralize$>_path %>
+<%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
+<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

@@ -4,16 +4,14 @@
 
 <table>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><th><$Attribute.name.initialCapitalString$></th>
-	<$endforeach do$>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><th><$Attribute.name.initialCapitalString.sentencize$></th><$endif$><$endforeach do$>
   </tr>
 
 <% @<$managedObjectClassName.lowercaseString$>s.each do |<$managedObjectClassName.lowercaseString$>| %>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %></td>
-	<$endforeach do$>
-    <td><%= link_to 'Show', <$managedObjectClassName.lowercaseString$> %></td>
-    <td><%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(<$managedObjectClassName.lowercaseString$>) %></td>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %></td><$endif$><$endforeach do$>
+    <td><%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'show' %></td>
+    <td><%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'edit' %></td>
     <td><%= link_to 'Destroy', <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -21,4 +19,6 @@
 
 <br />
 
-<%= link_to 'New <$managedObjectClassName.lowercaseString$>', new_<$managedObjectClassName.lowercaseString$>_path %>
+<%= link_to 'New <$managedObjectClassName.lowercaseString$>', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'new' %>
+
+

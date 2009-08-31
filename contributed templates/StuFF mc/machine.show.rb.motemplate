@@ -4,10 +4,10 @@
   <%= f.error_messages %>
 	<$foreach Attribute noninheritedAttributes do$>
 	<p>
-	  <b><$Attribute.name.initialCapitalString$>:</b>
+	  <b><$Attribute.name.initialCapitalString.sentencize$>:</b>
 	  <$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$>
 	</p><$endforeach do$>
 <% end %>
 
-<%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(@<$managedObjectClassName.lowercaseString$>) %> |
-<%= link_to 'Back', <$managedObjectClassName.lowercaseString.pluralize$>_path %>
+<%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
+<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

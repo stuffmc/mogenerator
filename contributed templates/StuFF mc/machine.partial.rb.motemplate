@@ -2,13 +2,13 @@
   <%= f.error_messages %>
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
 	<p>
-	    <%= f.label :<$Attribute.name$> %><br />
+	    <$Attribute.name.initialCapitalString.sentencize$><br />
 	    <%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.underscorize$> %>
   	</p><$endif$><$endforeach do$>
 
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-	<p><a href="javascript:alert('hello world! (a.k.a. this not yet implemented)')">add</a> <$Relationship.name$></p><$else$>
-	<p><$Relationship.name$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
+	<p><a href="javascript:alert('hello world! (a.k.a. this not yet implemented)')">Add</a> <$Relationship.name.initialCapitalString.sentencize$></p><$else$>
+	<p><$Relationship.name.initialCapitalString$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
 	</p><$endif$><$endforeach do$>
   <p>
     <%= f.submit yield(:button) %>

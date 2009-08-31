@@ -81,7 +81,7 @@ class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>C
     @<$managedObjectClassName.lowercaseString$>.destroy
 
     respond_to do |format|
-      format.html { redirect_to(<$managedObjectClassName.lowercaseString$>s_url) }
+      format.html { redirect_to(:controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index') }
       format.xml  { head :ok }
     end
   end

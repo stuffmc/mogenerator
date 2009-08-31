@@ -438,28 +438,37 @@ static NSRange _nextSearchRange(NSString *string, unsigned mask,
 	return [inflector pluralize:self];
 }
 
+- (NSString *)sentencize {
+	return [self deCamelizeWith:@" "];
+}
+
 - (NSString *)underscorize {
+	return [[self deCamelizeWith:@"_"] lowercaseString];
+}
+
+
+- (NSString *)deCamelizeWith:(NSString *)delimiter {
 	// Largely inspired (actually almost totally) from http://github.com/yfactorial/objectivesupport/Classes/lib/Core/Inflections/NSString+InflectionSupport.m 
 	unichar *buffer = calloc([self length], sizeof(unichar));
 	[self getCharacters:buffer ];
-	NSMutableString *underscored = [NSMutableString string];
-
+	NSMutableString *newString = [NSMutableString string];
+	
 	NSString *currChar;
 	for (int i = 0; i < [self length]; i++) {
 		currChar = [NSString stringWithCharacters:buffer+i length:1];
 		if (i) {
 			if([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:buffer[i]]) {
-				[underscored appendFormat:@"_%@", [currChar lowercaseString]];
+				[newString appendFormat:@"%@%@", delimiter, currChar];
 			} else {
-				[underscored appendString:currChar];
+				[newString appendString:currChar];
 			}
 		} else {
-			[underscored appendString:[currChar lowercaseString]];
+			[newString appendString:currChar];
 		}
 		
 	}
 	free(buffer);
-	return underscored;
+	return newString;
 }
 
 - (NSRange)rangeOfString:(NSString *)aString occurrenceNum:(int)n
