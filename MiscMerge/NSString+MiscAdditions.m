@@ -434,15 +434,32 @@ static NSRange _nextSearchRange(NSString *string, unsigned mask,
 
 
 - (NSString*)pluralize {
-	//	ddprintf(@"\nplural of person is %@ and singular of people is %@", [inflector pluralize:@"person"], [inflector singularize:@"people"]);
-	// TODO: Get the appSuportFileName AND Pass the inflector, *DO NOT* initialize it everytime. Time pressure right now :(
-	//	NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
-	NSString *path = @""; // @"/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc/ActiveSupportInflector/ActiveSupportInflector.plist";
-//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
-//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] init] autorelease];
 	ActiveSupportInflector *inflector = [ActiveSupportInflector sharedInflector];
 	return [inflector pluralize:self];
-//	return @"PLUUUUURAL";
+}
+
+- (NSString *)underscorize {
+	// Largely inspired (actually almost totally) from http://github.com/yfactorial/objectivesupport/Classes/lib/Core/Inflections/NSString+InflectionSupport.m 
+	unichar *buffer = calloc([self length], sizeof(unichar));
+	[self getCharacters:buffer ];
+	NSMutableString *underscored = [NSMutableString string];
+
+	NSString *currChar;
+	for (int i = 0; i < [self length]; i++) {
+		currChar = [NSString stringWithCharacters:buffer+i length:1];
+		if (i) {
+			if([[NSCharacterSet uppercaseLetterCharacterSet] characterIsMember:buffer[i]]) {
+				[underscored appendFormat:@"_%@", [currChar lowercaseString]];
+			} else {
+				[underscored appendString:currChar];
+			}
+		} else {
+			[underscored appendString:[currChar lowercaseString]];
+		}
+		
+	}
+	free(buffer);
+	return underscored;
 }
 
 - (NSRange)rangeOfString:(NSString *)aString occurrenceNum:(int)n

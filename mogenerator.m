@@ -208,6 +208,9 @@ NSString	*gCustomBaseClass;
 			return [self scalarAttributeType];	// NSFloatAttributeType is also "float" in rails. NSTransformableAttributeType will then return nil.
 	}
 }
+- (BOOL)isBinaryData {
+	return (self.attributeType == NSBinaryDataAttributeType);
+}
 - (NSString*)railsHTMLFormType {
 	if ([self attributeType] != NSTransformableAttributeType) {
 		

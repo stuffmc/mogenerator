@@ -1,9 +1,9 @@
-<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
+<% form_for @<$managedObjectClassName.lowercaseString$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
 	<p>
 	    <%= f.label :<$Attribute.name$> %><br />
-	    <%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.lowercaseString$> %>
+	    <%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.underscorize$> %>
   	</p><$endif$><$endforeach do$>
 
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>

@@ -4,9 +4,8 @@
   <%= f.error_messages %>
 	<$foreach Attribute noninheritedAttributes do$>
 	<p>
-	<p>
 	  <b><$Attribute.name.initialCapitalString$>:</b>
-	  <%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.lowercaseString$> %>
+	  <$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$>
 	</p><$endforeach do$>
 <% end %>
 

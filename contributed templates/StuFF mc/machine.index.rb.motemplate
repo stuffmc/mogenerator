@@ -10,7 +10,7 @@
 
 <% @<$managedObjectClassName.lowercaseString$>s.each do |<$managedObjectClassName.lowercaseString$>| %>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.lowercaseString$> %></td>
+	<$foreach Attribute noninheritedAttributes do$><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %></td>
 	<$endforeach do$>
     <td><%= link_to 'Show', <$managedObjectClassName.lowercaseString$> %></td>
     <td><%= link_to 'Edit', edit_<$managedObjectClassName.lowercaseString$>_path(<$managedObjectClassName.lowercaseString$>) %></td>

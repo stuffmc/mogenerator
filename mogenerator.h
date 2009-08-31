@@ -31,6 +31,7 @@
 - (BOOL)hasScalarAttributeType;
 - (NSString*)scalarAttributeType;
 - (NSString*)railsAttributeType;
+- (BOOL)isBinaryData;
 - (NSString*)railsHTMLFormType;
 - (BOOL)hasDefinedAttributeType;
 - (NSString*)objectAttributeType;

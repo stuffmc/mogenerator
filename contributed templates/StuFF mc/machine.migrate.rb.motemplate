@@ -1,8 +1,10 @@
 class Create<$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$> < ActiveRecord::Migration
   def self.up
     create_table :<$managedObjectClassName.lowercaseString.pluralize$> do |t|
-			t.integer :<$managedObjectClassName.lowercaseString$>_id<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
-			t.<$Attribute.railsAttributeType$> :<$Attribute.name.lowercaseString$><$endif$><$endforeach do$>
+		t.integer 	:<$managedObjectClassName.lowercaseString$>_id<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
+		<$if Attribute.isBinaryData $>t.string 	:<$Attribute.name.underscorize$>_file_name
+    	t.string 	:<$Attribute.name.underscorize$>_content_type
+	  	t.integer 	:<$Attribute.name.underscorize$>_file_size<$else$>t.<$Attribute.railsAttributeType$> 	:<$Attribute.name.underscorize $><$endif$><$endif$><$endforeach do$>
 
 	    t.timestamps
     end
