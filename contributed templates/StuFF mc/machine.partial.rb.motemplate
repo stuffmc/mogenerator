@@ -20,7 +20,7 @@
 		<% for <$children.name.singularize.underscorize$> in @<$managedObjectClassName.lowercaseString$>.<$children.name.underscorize.pluralize$> %>
 			<$foreach Attribute children.noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
 			<tr>
-				<% fields_for "<$children.name.underscorize$>[<$Attribute.name.singularize.underscorize$>_attributes][]", <$children.name.singularize.underscorize$> do |<$children.name.singularize.underscorize$>_form| %>
+				<% fields_for "<$managedObjectClassName.underscorize$>[<$children.name.underscorize$>_attributes][]", <$children.name.singularize.underscorize$> do |<$children.name.singularize.underscorize$>_form| %>
 					<td><$ Attribute.name.singularize.sentencize.initialCapitalString $>: </td><td><%= <$children.name.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ Attribute.name.underscorize $> %><td>
 				<% end %>
 			</tr>

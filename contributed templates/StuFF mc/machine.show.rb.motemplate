@@ -4,20 +4,29 @@
 <%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
 <%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
 
-<% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
+<% form_for(@<$managedObjectClassName.underscorize$>) do |f| %>
   <%= f.error_messages %>
+  	<table>
 	<$foreach Attribute noninheritedAttributes do$>
-	<p>
-	  <b><$Attribute.name.initialCapitalString.sentencize$>:</b>
-	  <$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$>
+  	<tr>
+	  <td><b><$Attribute.name.initialCapitalString.sentencize$>:</b></td>
+	  <td><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$></td>
+  	</tr>
 	</p><$endforeach do$>
+
+	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany$>
+  	<tr>
+	  <td><b><$RelationshipSingle.name.initialCapitalString.sentencize$>:</b></td>
+	  <td><%=h @<$managedObjectClassName.underscorize$>.<$RelationshipSingle.name.underscorize$>.name rescue nil %></td>
+  	</tr>
+	<$endif$><$endforeach do$>
 	
+  	</table>
 	
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
 	<div id="flash_notice">
-	<h3><$Relationship.name.initialCapitalString$> for this <$managedObjectClassName.lowercaseString$></h3>
-	<% for <$Relationship.name.singularize$> in @<$managedObjectClassName.lowercaseString$>.<$Relationship.name$> %><%= link_to <$Relationship.name.singularize$>.name, :controller => '<$Relationship.name$>', :id => <$Relationship.name.singularize$>.id, :action => 'show' %><br /><% end %></div>
-
+	<h3><$Relationship.name.sentencize.initialCapitalString$> for this <$managedObjectClassName.lowercaseString.sentencize$></h3>
+	<% for <$Relationship.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$> %><%= link_to <$Relationship.name.singularize.underscorize$>.name, :controller => '<$Relationship.name.underscorize$>', :id => <$Relationship.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
 	<$endif$><$endforeach do$>
 
 	

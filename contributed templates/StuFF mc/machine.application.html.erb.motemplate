@@ -8,9 +8,12 @@
   </head>
   <body>
     <div id="container">
-     | <$foreach Entity entitiesByName do$>
-  <%= link_to "<$Entity.name.pluralize.sentencize.initialCapitalString$>", <$Entity.name.pluralize.underscorize$>_path %> | <$endforeach do$>
-
+    	<table>
+    	<tr>
+     <td>| <$foreach Entity entitiesByName do$>
+  <%= link_to "<$Entity.name.pluralize.sentencize.initialCapitalString$>", <$Entity.name.pluralize.underscorize$>_path %> [<%= link_to "new", new_<$Entity.name.underscorize$>_path %>]</td><td> | <$endforeach do$></td>
+    	</tr>
+    	</table>
       <%- flash.each do |name, msg| -%>
         <%= content_tag :div, msg, :id => "flash_#{name}" %>
       <%- end -%>

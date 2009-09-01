@@ -59,12 +59,6 @@ NSString	*gCustomBaseClass;
 			if ([relation isToMany]) {
 				[array addObject:[relation destinationEntity]];
 			}
-//			[array addObject:[entity managedObjectClassName]];
-//			[array addObject:[[relation destinationEntity] attributeKeys]];
-			
-			
-//			[array addObject:entity];
-
 		}
 	}
 	return array;
