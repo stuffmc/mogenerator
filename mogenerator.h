@@ -59,6 +59,7 @@
 
 - (NSString*)appSupportFileNamed:(NSString*)fileName_;
 - (NSError*)outputError:(NSError*)error;
-- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName;
+//- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
+- (BOOL)processEntity:(id)entityModelOrRelationShip forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName;
 
 @end

@@ -1,0 +1,13 @@
+<div class="item">
+	<table>
+	<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$destinationEntity.managedObjectClassName.singularize.underscorize$> do |<$destinationEntity.managedObjectClassName.singularize.underscorize$>_form| %>
+	<$foreach Attribute destinationEntity.noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
+		<tr><td><$ Attribute.name.singularize.sentencize.initialCapitalString $>: </td><td><%= <$destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ Attribute.name.underscorize $> %><td></tr><$endif$><$endforeach do$>
+	<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$if !RelationshipChildren.isToMany$>
+		<tr><td><$RelationshipChildren.name.initialCapitalString$>: </td><td><%= <$destinationEntity.managedObjectClassName.singularize.underscorize$>_form.collection_select :id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><$endif$><$endforeach do$>
+	</table>
+
+		<%= link_to_function "Remove this <$destinationEntity.managedObjectClassName.sentencize$>", "this.up('.item').remove()" %><hr />
+		
+	<% end %>
+</div>

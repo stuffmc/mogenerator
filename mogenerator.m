@@ -439,6 +439,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *machineControllerRB;
 		MiscMergeEngine *machineModelRB;
 		MiscMergeEngine *machinePartialRB;
+		MiscMergeEngine *machineChildrenRB;
 		MiscMergeEngine *machineEditRB;
 		MiscMergeEngine *machineIndexRB;
 		MiscMergeEngine *machineNewRB;
@@ -459,6 +460,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			assert(machineModelRB);
 			machinePartialRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.partial.rb.motemplate"]);
 			assert(machinePartialRB);
+			machineChildrenRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.children.rb.motemplate"]);
+			assert(machineChildrenRB);
 			machineEditRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.edit.rb.motemplate"]);
 			assert(machineEditRB);
 			machineIndexRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.index.rb.motemplate"]);
@@ -571,6 +574,16 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"_controller.rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machinePartialRB		withFileName:@"/_.html.erb"];
+				
+				for (NSEntityDescription *oneEntityFromTheModel in [model entities]) {
+					for (NSRelationshipDescription *children in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
+						if ([children isToMany]) {
+							machineDirtied = [self processEntity:children forMachine:machineChildrenRB	withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
+//							ddprintf(@"\n::CHILD: %@\n", [[children destinationEntity] name]);
+						}
+					}
+				}
+				
 				machineDirtied = [self processEntity:entity forMachine:machineEditRB		withFileName:@"/edit.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineIndexRB		withFileName:@"/index.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineNewRB			withFileName:@"/new.html.erb"];
@@ -623,12 +636,22 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	return error;
 }
 
-- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
+//- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
+- (BOOL)processEntity:(id)entityModelOrRelationShip forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 
-	NSString *entityClassName = [[entity managedObjectClassName] underscorize];
-	NSString *generatedMachine = [machine executeWithObject:(entity)?(id)entity:(id)model sender:nil];
+	NSString *entityClassName = nil;
+	NSEntityDescription *entity = nil;
+	if ([entityModelOrRelationShip isKindOfClass:[NSEntityDescription class]] || [entityModelOrRelationShip isKindOfClass:[NSRelationshipDescription class]]) {
+		if ([entityModelOrRelationShip isKindOfClass:[NSRelationshipDescription class]]) {
+			entity = [entityModelOrRelationShip destinationEntity];
+		} else {
+			entity = entityModelOrRelationShip;
+		}
+		entityClassName = [[entity managedObjectClassName] underscorize];
+	}
+	NSString *generatedMachine = [machine executeWithObject:(entityModelOrRelationShip)?(id)entityModelOrRelationShip:(id)model sender:nil];
 
-//	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
+//	ddprintf(@"\nrails entityClassName: %@ - fileName: %@ - generatedMachine: %@", entityClassName, fileName); //, generatedMachine);
 
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *machineRBFileName;
@@ -636,7 +659,14 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	NSString *currentMachineDir;
 	
 	if ([fileName hasPrefix:@"/"]) {
-		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[entityClassName pluralize]];
+		NSString *directoryEntity;
+		if ([fileName hasPrefix:@"/_children_"]) {
+			directoryEntity = [fileName substringFromIndex:11];
+		} else {
+			directoryEntity = [entityClassName pluralize];
+		}
+		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:directoryEntity];
+//		ddprintf(@"\n!!!machineDirToCreate: %@ - ENTITY: %@ - plural: %@", machineDirToCreate, entityClassName, [entityClassName pluralize]);
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
@@ -657,9 +687,16 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			}
 		}
 		if ([fileName hasPrefix:@"/_"])	{
-			fileName = [NSString stringWithFormat:@"/_%@%@", entityClassName, [fileName substringFromIndex:2]];
+			if ([fileName hasPrefix:@"/_children"]) {
+				fileName = [NSString stringWithFormat:@"/_%@.html.erb", entityClassName];
+//				ddprintf(@"\nrails entityClassName: %@ - fileName: %@ - generatedMachine: %@", entityClassName, fileName, generatedMachine);
+			} else {
+				fileName = [NSString stringWithFormat:@"/_%@%@", entityClassName, [fileName substringFromIndex:2]];
+			}
+//			ddprintf(@"\nfileName: %@", fileName);
 		}
 		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
+//		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
 	} else {
 		if (entityClassName) {
 			if ([fileName containsString:@"controller"]) {

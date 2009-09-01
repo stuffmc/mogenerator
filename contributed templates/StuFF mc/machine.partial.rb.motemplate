@@ -1,3 +1,4 @@
+<% # TODO: refactor to use partial with show doing the same %>
 <% form_for @<$managedObjectClassName.lowercaseString$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
@@ -13,29 +14,28 @@
   <p>
     <%= f.submit yield(:button) %>
   </p>
+  	<% if @<$managedObjectClassName.underscorize$>.id == nil %>
 	<$foreach children allToManyRelationships do$>
 	<div id="flash_notice">
 		<h3><$children.name.pluralize.sentencize.initialCapitalString$> for this <$managedObjectClassName.sentencize $></h3>
 	  	<table>
-		<% for <$children.name.singularize.underscorize$> in @<$managedObjectClassName.lowercaseString$>.<$children.name.underscorize.pluralize$> %>
-			<$foreach Attribute children.noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
-			<tr>
-				<% fields_for "<$managedObjectClassName.underscorize$>[<$children.name.underscorize$>_attributes][]", <$children.name.singularize.underscorize$> do |<$children.name.singularize.underscorize$>_form| %>
-					<td><$ Attribute.name.singularize.sentencize.initialCapitalString $>: </td><td><%= <$children.name.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ Attribute.name.underscorize $> %><td>
-				<% end %>
-			</tr>
-				<$endif$>
-			<$endforeach do$>
-			<$foreach RelationshipChildren children.noninheritedRelationships do$><$if !RelationshipChildren.isToMany$>
-			<tr>
-			<td><$RelationshipChildren.name.initialCapitalString$>: </td><td><%= f.collection_select :id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
-			</tr>
-			<$endif$><$endforeach do$>
-		<% end %>
+		<div id="items">
+		<%= render :partial => 'item', :collection => @person.items %>
+		</div>
+		<%= link_to_function "Add an <$children.name.sentencize.initialCapitalString$>" do |page|
+			page.insert_html :bottom, :items, :partial => '<$children.name.underscorize$>', :object => <$children.name.singularize.initialCapitalString$>.new
+		end %>
   		</table>
 	</div>
 	<p>
 	<%= f.submit yield(:button) %>
 	</p>
 	<$endforeach do$>
+	<% else  %>
+	<$foreach RelationshipShow noninheritedRelationships do$><$if RelationshipShow.isToMany$>
+	<div id="flash_notice">
+	<h3><$RelationshipShow.name.sentencize.initialCapitalString$> for this <$managedObjectClassName.lowercaseString.sentencize$></h3>
+	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %><%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
+	<$endif$><$endforeach do$>
+	<% end %>
 <% end %>
