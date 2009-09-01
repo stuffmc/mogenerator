@@ -7,7 +7,15 @@
   	</p><$endif$><$endforeach do$>
 
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	
+	<% for item in @<$managedObjectClassName.lowercaseString$>.<$Relationship.name$> %>
+	<% fields_for "<$managedObjectClassName.lowercaseString$>[<$Relationship.name.singularize$>_attributes][]", <$Relationship.name.singularize$> do |<$Relationship.name.singularize$>_form| %>
+	<p>Item: <%= <$Relationship.name.singularize$>_form.text_field :name %></p>
+	<% end %>
+<% end %>
+	
 	<p><a href="javascript:alert('hello world! (a.k.a. this not yet implemented)')">Add</a> <$Relationship.name.initialCapitalString.sentencize$></p><$else$>
+	
 	<p><$Relationship.name.initialCapitalString$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
 	</p><$endif$><$endforeach do$>
   <p>

@@ -1,8 +1,4 @@
 #edit the following paths for the -m -H -M (or -O) and -template-path. Leave -R as . since the rails app is created first here"
-run "mogenerator  -m '../../../../../Starkoche/iPhone/SK.xcdatamodeld/SK 4.xcdatamodel' -H ../../../../../Starkoche/iPhone/Models/Human -M ../../../../../Starkoche/iPhone/Models/Machine -template-path '../../../contributed\ templates/StuFF mc' -R ."
-
-rake "db:migrate"
-
 run "rm README"
 run "rm public/index.html"
 
@@ -10,6 +6,10 @@ run "rm public/index.html"
 rake "gems:install"
 
 generate :nifty_layout
+
+run "mogenerator  -m '../iPhone/SK.xcdatamodeld/SK 4.xcdatamodel' -H ../iPhone/Models/Human -M ../iPhone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
+
+rake "db:migrate"
 
 plugin "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
                     
@@ -32,4 +32,4 @@ end
 END
 
 git :add => ".", :commit => "-m 'Initial commit of the app created with motemplate.rb (using mo_rails_generator)'"
-run "cd ."
+#run "script/server"

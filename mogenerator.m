@@ -135,15 +135,6 @@ NSString	*gCustomBaseClass;
 @end
 
 @implementation NSAttributeDescription (scalarAttributeType)
-//- (NSString*)pluralize {
-////	ddprintf(@"\nplural of person is %@ and singular of people is %@", [inflector pluralize:@"person"], [inflector singularize:@"people"]);
-//	// TODO: Use the same for NSAttributeDescription & NSEntityDescription  Get the appSuportFileName AND Pass the inflector, *DO NOT* initialize it everytime. Time pressure right now :(
-////	NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
-//	NSString *path = @"/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc/ActiveSupportInflector/ActiveSupportInflector.plist";
-//	ActiveSupportInflector *inflector = [[[ActiveSupportInflector alloc] initWithInflectionsFromFile:path] autorelease];
-//	return [inflector pluralize:[self name]];
-//}
-
 - (BOOL)hasScalarAttributeType {
 	switch ([self attributeType]) {
 		case NSInteger16AttributeType:
@@ -222,14 +213,6 @@ NSString	*gCustomBaseClass;
 		case NSBinaryDataAttributeType:
 			return @"file_field";
 		default:
-			//		case NSInteger16AttributeType:
-			//		case NSInteger32AttributeType:
-			//		case NSInteger64AttributeType:
-			//		case NSDoubleAttributeType:
-			//		case NSFloatAttributeType:
-			//		case NSDecimalAttributeType:
-			//		case NSDateAttributeType:
-			//		case NSStringAttributeType:
 			return @"text_field"; // @"text_area" for @"text"
 			break;
 	}
@@ -447,6 +430,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *machineNewRB;
 		MiscMergeEngine *machineShowRB;
 		MiscMergeEngine *machineMigrateRB;
+		MiscMergeEngine *machineRoutesRB;
+		MiscMergeEngine *machineAppLayoutRB;
 		MiscMergeEngine *humanRB;
 		
 		if (railsDir) {
@@ -471,9 +456,17 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			machineMigrateRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.migrate.rb.motemplate"]);
 			assert(machineMigrateRB);
 			
+			machineRoutesRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.routes.rb.motemplate"]);
+			assert(machineRoutesRB);
+						
+			machineAppLayoutRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.application.html.erb.motemplate"]);
+			assert(machineAppLayoutRB);
+			
 			// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
 			humanRB = engineWithTemplatePath([self appSupportFileNamed:@"human.rb.motemplate"]);
 			assert(humanRB);
+			
+			machineDirRB = [railsDir stringByAppendingPathComponent:@"app"];
 		}
 		// --- end @stuffmc
         
@@ -585,7 +578,11 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 //				}
 				
 			}
-		}
+		} 
+
+		[self processEntity:nil forMachine:machineRoutesRB		withFileName:@"config/routes.rb"];
+		[self processEntity:nil forMachine:machineAppLayoutRB	withFileName:@"app/views/layouts/application.html.erb"];
+		
 	}
 	
 	if (tempMOMPath) {
@@ -615,14 +612,14 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 - (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 
 	NSString *entityClassName = [[entity managedObjectClassName] lowercaseString];
-	NSString *generatedMachine = [machine executeWithObject:entity sender:nil];
+	NSString *generatedMachine = [machine executeWithObject:(entity)?entity:model sender:nil];
 
 //	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
 
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *machineRBFileName;
-	NSString *machineDirRB = [railsDir stringByAppendingPathComponent:@"app"];
 	NSString *machineDirToCreate = nil;
+	NSString *currentMachineDir;
 	
 	if ([fileName hasPrefix:@"/"]) {
 		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:[entityClassName pluralize]];
@@ -640,7 +637,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			// Create the directory if it doesn't exist already
 	//		ddprintf(@"[machineDir stringByAppendingPathComponent:entityClassName]: %@", [machineDir stringByAppendingPathComponent:entityClassName]);
 			if ([fm createDirectoryAtPath:machineDirToCreate attributes:nil]) {
-				machineDirRB = machineDirToCreate;
+				currentMachineDir = machineDirToCreate;
 			} else {
 				ddprintf(@"\nError while creating %@", machineDirToCreate);
 			}
@@ -650,16 +647,20 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		}
 		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
 	} else {
-		if ([fileName containsString:@"controller"]) {
-			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"controllers"];
-//			ddprintf(@"\n entityClassName: %@ = %@", entityClassName, [entityClassName pluralize]);
-			entityClassName = [entityClassName pluralize];
+		if (entityClassName) {
+			if ([fileName containsString:@"controller"]) {
+				currentMachineDir = [machineDirRB stringByAppendingPathComponent:@"controllers"];
+				//			ddprintf(@"\n entityClassName: %@ = %@", entityClassName, [entityClassName pluralize]);
+				entityClassName = [entityClassName pluralize];
+			} else {
+				currentMachineDir = [machineDirRB stringByAppendingPathComponent:@"models"];
+			}
+			//TODO: Might not work with Rails having a "_" at the beginning...
+			//		machineRBFileName = [currentMachineDir stringByAppendingPathComponent:[NSString stringWithFormat:@"_%@%@", entityClassName, fileName]];
+			machineRBFileName = [currentMachineDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@", entityClassName, fileName]];
 		} else {
-			machineDirRB = [machineDirRB stringByAppendingPathComponent:@"models"];
+			machineRBFileName = [railsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", fileName]];
 		}
-		//TODO: Might not work with Rails having a "_" at the beginning...
-//		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"_%@%@", entityClassName, fileName]];
-		machineRBFileName = [machineDirRB stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@", entityClassName, fileName]];
 //		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
 	}
 
@@ -677,7 +678,10 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 //				ddprintf(@"\nAFTER 2nd error");
 				machineDirtied = YES;
 				machineFilesGenerated++;
+//			} else {
+//				ddprintf(@"generatedMachine: %@", generatedMachine);
 			}
+
 		}
 	}
 	return machineDirtied;

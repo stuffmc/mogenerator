@@ -1,6 +1,6 @@
-<!-- WARNING: This file was machine-generated and might be overwritten. -->
-
-<h1>Listing <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$></h1>
+<% # WARNING: This file was machine-generated and might be overwritten. %>
+<%=h content_for(:title, "Listing <$managedObjectClassName.lowercaseString.pluralize.sentencize$>") %>
+<h1><%= yield(:title) %></h1>
 
 <table>
   <tr>

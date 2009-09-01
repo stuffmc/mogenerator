@@ -438,6 +438,11 @@ static NSRange _nextSearchRange(NSString *string, unsigned mask,
 	return [inflector pluralize:self];
 }
 
+- (NSString*)singularize {
+	ActiveSupportInflector *inflector = [ActiveSupportInflector sharedInflector];
+	return [inflector singularize:self];
+}
+
 - (NSString *)sentencize {
 	return [self deCamelizeWith:@" "];
 }

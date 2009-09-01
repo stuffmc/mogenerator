@@ -33,6 +33,7 @@ enum
 @interface NSString (MiscAdditions)
 
 - (NSString*)pluralize;
+- (NSString*)singularize;
 - (NSString *)underscorize;
 - (NSString *)sentencize;
 - (NSString *)deCamelizeWith:(NSString *)delimiter;

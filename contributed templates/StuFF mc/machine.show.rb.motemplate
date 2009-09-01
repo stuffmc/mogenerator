@@ -1,4 +1,6 @@
-<!-- WARNING: This file was machine-generated and might be overwritten. -->
+<% # WARNING: This file was machine-generated and might be overwritten. %>
+<%=h content_for(:title, "<$managedObjectClassName.sentencize$>") %>
+<h1><%= yield(:title) %></h1>
 
 <% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
   <%= f.error_messages %>
