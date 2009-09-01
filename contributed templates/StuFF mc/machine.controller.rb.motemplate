@@ -5,7 +5,7 @@ class <$managedObjectClassName.pluralize$>Controller < ApplicationController
   # GET /<$managedObjectClassName.lowercaseString$>
   # GET /<$managedObjectClassName.lowercaseString$>.xml
   def index
-    @<$managedObjectClassName.lowercaseString$>s = <$managedObjectClassName$>.all
+    @<$managedObjectClassName.pluralize.underscorize$> = <$managedObjectClassName$>.all
 
     respond_to do |format|
       format.html # index.html.erb

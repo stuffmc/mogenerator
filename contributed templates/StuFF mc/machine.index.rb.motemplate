@@ -7,10 +7,10 @@
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><th><$Attribute.name.initialCapitalString.sentencize$></th><$endif$><$endforeach do$>
   </tr>
 
-<% @<$managedObjectClassName.lowercaseString$>s.each do |<$managedObjectClassName.lowercaseString$>| %>
+<% @<$managedObjectClassName.pluralize.underscorize$>.each do |<$managedObjectClassName.underscorize$>| %>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %></td><$endif$><$endforeach do$>
-    <td><%= link_to 'Show', <$managedObjectClassName.underscorize$>_path %></td>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> rescue nil %></td><$endif$><$endforeach do$>
+    <td><%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'show' %></td>
     <td><%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'edit' %></td>
     <td><%= link_to 'Destroy', <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
@@ -20,5 +20,3 @@
 <br />
 
 <%= link_to 'New <$managedObjectClassName.pluralize.sentencize.initialCapitalString$>', new_<$managedObjectClassName.underscorize$>_path %>
-
-
