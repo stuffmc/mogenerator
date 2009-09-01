@@ -1,7 +1,7 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
 # Make changes to <$managedObjectClassName$>_controller.rb instead.
 
-class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>Controller < ApplicationController
+class <$managedObjectClassName.pluralize$>Controller < ApplicationController
   # GET /<$managedObjectClassName.lowercaseString$>
   # GET /<$managedObjectClassName.lowercaseString$>.xml
   def index
@@ -29,7 +29,7 @@ class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>C
   def new
     @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-    2.times {@<$managedObjectClassName.lowercaseString$>.<$Relationship.name$>.build}<$endif$><$endforeach do$>
+    2.times {@<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build}<$endif$><$endforeach do$>
 
     respond_to do |format|
       format.html # new.html.erb
@@ -49,7 +49,7 @@ class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>C
 
     respond_to do |format|
       if @<$managedObjectClassName.lowercaseString$>.save
-        flash[:notice] = '<$managedObjectClassName$> was successfully created.'
+        flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully created.'
         format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
         format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>, :status => :created, :location => @<$managedObjectClassName.lowercaseString$> }
       else
@@ -66,7 +66,7 @@ class <$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$>C
 
     respond_to do |format|
       if @<$managedObjectClassName.lowercaseString$>.update_attributes(params[:<$managedObjectClassName.lowercaseString$>])
-        flash[:notice] = '<$managedObjectClassName$> was successfully updated.'
+        flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully updated.'
         format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
         format.xml  { head :ok }
       else

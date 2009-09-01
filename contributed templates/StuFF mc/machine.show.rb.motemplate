@@ -1,6 +1,8 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
 <%=h content_for(:title, "<$managedObjectClassName.sentencize$>") %>
 <h1><%= yield(:title) %></h1>
+<%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
+<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
 
 <% form_for(@<$managedObjectClassName.lowercaseString$>) do |f| %>
   <%= f.error_messages %>
@@ -9,7 +11,14 @@
 	  <b><$Attribute.name.initialCapitalString.sentencize$>:</b>
 	  <$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$>
 	</p><$endforeach do$>
-<% end %>
+	
+	
+	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	<div id="flash_notice">
+	<h3><$Relationship.name.initialCapitalString$> for this <$managedObjectClassName.lowercaseString$></h3>
+	<% for <$Relationship.name.singularize$> in @<$managedObjectClassName.lowercaseString$>.<$Relationship.name$> %><%= link_to <$Relationship.name.singularize$>.name, :controller => '<$Relationship.name$>', :id => <$Relationship.name.singularize$>.id, :action => 'show' %><br /><% end %></div>
 
-<%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
-<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
+	<$endif$><$endforeach do$>
+
+	
+<% end %>

@@ -5,19 +5,28 @@
 	    <$Attribute.name.initialCapitalString.sentencize$><br />
 	    <%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.underscorize$> %>
   	</p><$endif$><$endforeach do$>
-
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-	
-	<% for item in @<$managedObjectClassName.lowercaseString$>.<$Relationship.name$> %>
-	<% fields_for "<$managedObjectClassName.lowercaseString$>[<$Relationship.name.singularize$>_attributes][]", <$Relationship.name.singularize$> do |<$Relationship.name.singularize$>_form| %>
-	<p>Item: <%= <$Relationship.name.singularize$>_form.text_field :name %></p>
-	<% end %>
-<% end %>
-	
-	<p><a href="javascript:alert('hello world! (a.k.a. this not yet implemented)')">Add</a> <$Relationship.name.initialCapitalString.sentencize$></p><$else$>
-	
+		<% for <$Relationship.name.singularize.underscorize$> in @<$managedObjectClassName.lowercaseString$>.<$Relationship.name.underscorize$> %>
+			<% fields_for "<$managedObjectClassName.underscorize$>[<$Relationship.name.singularize.underscorize$>_attributes][]", <$Relationship.name.singularize.underscorize$> do |<$Relationship.name.singularize.underscorize$>_form| %>
+				<p><$Relationship.name.singularize.sentencize.initialCapitalString $>: <%#= <$Relationship.name.singularize.underscorize$>_form.text_field :name %></p>
+			<% end %>
+		<% end %>
+	<$else$>
 	<p><$Relationship.name.initialCapitalString$>: <%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %>
 	</p><$endif$><$endforeach do$>
+	<$foreach children allToManyRelationships do$>
+	<div class="flash_notice">
+		<h3><$children.name.sentencize.initialCapitalString$></h3>
+		<% for <$children.name.singularize.underscorize$> in @<$managedObjectClassName.lowercaseString$>.<$children.name.underscorize.pluralize$> %>
+			<$foreach Attribute children.noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
+				<% fields_for "<$children.name.underscorize$>[<$Attribute.name.singularize.underscorize$>_attributes][]", <$children.name.singularize.underscorize$> do |<$children.name.singularize.underscorize$>_form| %>
+					<p><$ Attribute.name.singularize.sentencize.initialCapitalString $>: <%= <$children.name.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ Attribute.name.underscorize $> %></p>
+				<% end %>
+			<$endif$>
+			<$endforeach do$>
+		<% end %>
+	</div>
+	<$endforeach do$>
   <p>
     <%= f.submit yield(:button) %>
   </p>

@@ -1,6 +1,6 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
 <%=h content_for(:title, "New <$managedObjectClassName.sentencize$>") %>
-<% partial_button 'Create <$managedObjectClassName.lowercaseString$>' %>
+<% partial_button 'Create <$managedObjectClassName.sentencize$>' %>
 
 <h1><%= yield(:title) %></h1>
 

@@ -7,7 +7,7 @@ rake "gems:install"
 
 generate :nifty_layout
 
-run "mogenerator  -m '../iPhone/SK.xcdatamodeld/SK 4.xcdatamodel' -H ../iPhone/Models/Human -M ../iPhone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
+run "mogenerator  -m '../iPhone/SK.xcdatamodeld/SK 5.xcdatamodel' -H ../iPhone/Models/Human -M ../iPhone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
 
 rake "db:migrate"
 

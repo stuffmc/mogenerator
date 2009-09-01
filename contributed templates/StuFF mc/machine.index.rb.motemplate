@@ -1,5 +1,5 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
-<%=h content_for(:title, "Listing <$managedObjectClassName.lowercaseString.pluralize.sentencize$>") %>
+<%=h content_for(:title, "Listing <$managedObjectClassName.pluralize.sentencize.initialCapitalString$>") %>
 <h1><%= yield(:title) %></h1>
 
 <table>
@@ -10,7 +10,7 @@
 <% @<$managedObjectClassName.lowercaseString$>s.each do |<$managedObjectClassName.lowercaseString$>| %>
   <tr>
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %></td><$endif$><$endforeach do$>
-    <td><%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'show' %></td>
+    <td><%= link_to 'Show', <$managedObjectClassName.underscorize$>_path %></td>
     <td><%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'edit' %></td>
     <td><%= link_to 'Destroy', <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
@@ -19,6 +19,6 @@
 
 <br />
 
-<%= link_to 'New <$managedObjectClassName.lowercaseString$>', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'new' %>
+<%= link_to 'New <$managedObjectClassName.pluralize.sentencize.initialCapitalString$>', new_<$managedObjectClassName.underscorize$>_path %>
 
 

@@ -51,6 +51,26 @@ NSString	*gCustomBaseClass;
 	}
 }
 
+- (NSArray *)allToManyRelationships {
+	NSMutableArray *array = [[[NSMutableArray alloc] init] autorelease];
+	nsenumerate ([[self managedObjectModel] entities], NSEntityDescription, entity) {
+		for (NSRelationshipDescription *relation in [self relationshipsWithDestinationEntity:entity]) {
+//			ddprintf(@"REL: %@ (ToMany: %d)", relation, [relation isToMany]);
+			if ([relation isToMany]) {
+				[array addObject:[relation destinationEntity]];
+			}
+//			[array addObject:[entity managedObjectClassName]];
+//			[array addObject:[[relation destinationEntity] attributeKeys]];
+			
+			
+//			[array addObject:entity];
+
+		}
+	}
+	return array;
+}
+
+
 #pragma mark Fetch Request support
 
 - (NSDictionary*)fetchRequestTemplates {
@@ -611,8 +631,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 - (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 
-	NSString *entityClassName = [[entity managedObjectClassName] lowercaseString];
-	NSString *generatedMachine = [machine executeWithObject:(entity)?entity:model sender:nil];
+	NSString *entityClassName = [[entity managedObjectClassName] underscorize];
+	NSString *generatedMachine = [machine executeWithObject:(entity)?(id)entity:(id)model sender:nil];
 
 //	ddprintf(@"\nrails entityClassName: %@ - generatedMachine: %@", entityClassName, generatedMachine);
 

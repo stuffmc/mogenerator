@@ -4,11 +4,10 @@
 class <$managedObjectClassName$> < ActiveRecord::Base
 
 	#Associations<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-	has_many :<$Relationship.name$>
-	
-	def <$Relationship.name.singularize$>_attributes=(<$Relationship.name.singularize$>_attributes)
-		<$Relationship.name.singularize$>_attributes.each do |a|
-			<$Relationship.name$>.build(a)
+	has_many :<$Relationship.name.underscorize$>	
+	def <$Relationship.name.singularize.underscorize$>_attributes=(<$Relationship.name.singularize.underscorize$>_attributes)
+		<$Relationship.name.singularize.underscorize$>_attributes.each do |a|
+			<$Relationship.name.underscorize$>.build(a)
 		end
 	end
 	<$else$>

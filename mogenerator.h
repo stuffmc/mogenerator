@@ -22,6 +22,7 @@
 - (NSString*)customSuperentity;
 - (void)_processPredicate:(NSPredicate*)predicate_ bindings:(NSMutableArray*)bindings_;
 - (NSArray*)prettyFetchRequests;
+- (NSArray *)allToManyRelationships;
 @end
 
 @interface NSAttributeDescription (scalarAttributeType)

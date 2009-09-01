@@ -1,16 +1,18 @@
-class Create<$managedObjectClassName.lowercaseString.pluralize.initialCapitalString$> < ActiveRecord::Migration
+class Create<$managedObjectClassName.pluralize$> < ActiveRecord::Migration
   def self.up
-    create_table :<$managedObjectClassName.lowercaseString.pluralize$> do |t|
-		t.integer 	:<$managedObjectClassName.lowercaseString$>_id<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
+    create_table :<$managedObjectClassName.pluralize.underscorize$> do |t|
+		t.integer 	:<$managedObjectClassName.underscorize$>_id<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
 		<$if Attribute.isBinaryData $>t.string 	:<$Attribute.name.underscorize$>_file_name
     	t.string 	:<$Attribute.name.underscorize$>_content_type
 	  	t.integer 	:<$Attribute.name.underscorize$>_file_size<$else$>t.<$Attribute.railsAttributeType$> 	:<$Attribute.name.underscorize $><$endif$><$endif$><$endforeach do$>
-
+		<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany$>
+		t.integer 	:<$Relationship.name.underscorize$>_id<$endif$><$endforeach do$>
+	
 	    t.timestamps
     end
   end
 
   def self.down
-    drop_table :<$managedObjectClassName.lowercaseString.pluralize$>
+    drop_table :<$managedObjectClassName.pluralize.underscorize$>
   end
 end
