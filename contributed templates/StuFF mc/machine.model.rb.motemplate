@@ -5,11 +5,31 @@ class <$managedObjectClassName$> < ActiveRecord::Base
 
 	#Associations<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
 	has_many :<$Relationship.name.underscorize$>	
+	after_save :save_<$Relationship.name.underscorize$>
+	
 	def <$Relationship.name.singularize.underscorize$>_attributes=(<$Relationship.name.singularize.underscorize$>_attributes)
 		<$Relationship.name.singularize.underscorize$>_attributes.each do |a|
-			<$Relationship.name.underscorize$>.build(a)
+		  if a[:<$Relationship.name.singularize.underscorize$>_id].blank?
+  			<$Relationship.name.underscorize$>.build(a)
+      else
+        #@<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_sql(["SELECT * FROM <$Relationship.name.underscorize$> WHERE id = ?", a[:<$Relationship.name.singularize.underscorize$>_id].to_i])
+        @<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_id(a[:<$Relationship.name.singularize.underscorize$>_id])
+
+        #@<$Relationship.name.singularize.underscorize$> = <$Relationship.name.underscorize$>_found[0]
+			end
 		end
 	end
+
+  def save_<$Relationship.name.underscorize$>
+    if (!@<$Relationship.name.underscorize$>_found.nil?)
+      @<$Relationship.name.underscorize$>_found.each do |i|
+        i.<$managedObjectClassName.underscorize$>_id = id;
+        i.save
+      end
+    end
+    # @<$Relationship.name.singularize.underscorize$>.<$managedObjectClassName.underscorize$>_id = id;
+    # @<$Relationship.name.singularize.underscorize$>.save
+  end
 	<$else$>
 	belongs_to :<$Relationship.name$><$endif$><$endforeach do$>
 
@@ -17,4 +37,6 @@ class <$managedObjectClassName$> < ActiveRecord::Base
 #	validates_attachment_presence	:<$Attribute.name.underscorize$>
 #	validates_attachment_size		:<$Attribute.name.underscorize$>,	:less_than => 100.kilobytes
 	<$endif$><$endforeach do$>	
+	  
+	  
 end

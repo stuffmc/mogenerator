@@ -1,8 +1,8 @@
 <div class="<$destinationEntity.managedObjectClassName.singularize.underscorize$>">
 	<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
-	inverseRelationship.name.pluralize.underscorize $>_existing_<$destinationEntity.managedObjectClassName.underscorize$> do |item_form| %>
+	inverseRelationship.name.pluralize.underscorize $>_existing_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| %>
 	
-		 <%= t :existing %>: <%= item_form.collection_select :item, Item.all, :id, :name, {:prompt => true} %><%= [" ", t('confirm')].to_sentence %> <%= t :or %>
+		 <%= t :existing %>: <%= <$destinationEntity.managedObjectClassName.underscorize$>_form.collection_select :id, <$destinationEntity.managedObjectClassName$>.find_all_by_<$ inverseRelationship.name.singularize $>_id(nil), :id, :name, {:prompt => true} %><%= [" ", t('confirm')].to_sentence %> <%= t :or %>
 
 		<%= link_to_function t('Remove this', :model => '<$destinationEntity.managedObjectClassName.sentencize$>'), "this.up('.<$destinationEntity.managedObjectClassName.singularize.underscorize$>').remove()" %><hr />
 		
