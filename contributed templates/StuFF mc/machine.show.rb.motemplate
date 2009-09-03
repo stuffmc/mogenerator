@@ -1,5 +1,5 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
-<%=h content_for(:title, "<$managedObjectClassName.sentencize$>") %>
+<%=h content_for(:title, <$managedObjectClassName.initialCapitalString$>.human_name) %>
 <h1><%= yield(:title) %></h1>
 <%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
 <%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
@@ -9,8 +9,8 @@
   	<table>
 	<$foreach Attribute noninheritedAttributes do$>
   	<tr>
-	  <td><b><$Attribute.name.initialCapitalString.sentencize$>:</b></td>
-	  <td><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=h @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$></td>
+	  <td><b><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %>:</b></td>
+	  <td><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=<$if Attribute.isDate $>l<$else$>h<$endif$> @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> %><$endif$></td>
   	</tr>
 	</p><$endforeach do$>
 
@@ -25,7 +25,7 @@
 	
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
 	<div id="flash_notice">
-	<h3><$Relationship.name.sentencize.initialCapitalString$> for this <$managedObjectClassName.lowercaseString.sentencize$></h3>
+	<h3><%= t :for_this, :children => t('<$Relationship.name.singularize.underscorize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	<% for <$Relationship.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$> %><%= link_to <$Relationship.name.singularize.underscorize$>.name, :controller => '<$Relationship.name.underscorize$>', :id => <$Relationship.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
 	<$endif$><$endforeach do$>
 

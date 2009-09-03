@@ -5,7 +5,7 @@ class Create<$managedObjectClassName.pluralize$> < ActiveRecord::Migration
 		<$if Attribute.isBinaryData $>t.string 	:<$Attribute.name.underscorize$>_file_name
     	t.string 	:<$Attribute.name.underscorize$>_content_type
 	  	t.integer 	:<$Attribute.name.underscorize$>_file_size<$else$>t.<$Attribute.railsAttributeType$> 	:<$Attribute.name.underscorize $><$endif$><$endif$><$endforeach do$>
-		<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany$>
+		<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
 		t.integer 	:<$Relationship.name.underscorize$>_id<$endif$><$endforeach do$>
 	
 	    t.timestamps

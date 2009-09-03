@@ -1,22 +1,28 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
-<%=h content_for(:title, "Listing <$managedObjectClassName.pluralize.sentencize.initialCapitalString$>") %>
+<%=h content_for(:title, t('Listing Record', 
+                        :model => t('<$managedObjectClassName.underscorize$>', :count => @<$managedObjectClassName.pluralize.underscorize$>.count), 
+                        :there_is_only => t('there_is_only'), :listing => t('listing'), :count => @<$managedObjectClassName.pluralize.underscorize$>.count)) %>
+  
 <h1><%= yield(:title) %></h1>
 
 <table>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><th><$Attribute.name.initialCapitalString.sentencize$></th><$endif$><$endforeach do$>
+  <td colspan="3" />
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><th><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %></th>
+	  <$endif$><$endforeach do$>
   </tr>
 
 <% @<$managedObjectClassName.pluralize.underscorize$>.each do |<$managedObjectClassName.underscorize$>| %>
   <tr>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=h <$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$> rescue nil %></td><$endif$><$endforeach do$>
-    <td><%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'show' %></td>
-    <td><%= link_to 'Edit', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'edit' %></td>
-    <td><%= link_to 'Destroy', <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
+  <td><%= link_to image_tag("arrow_item.gif"), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'show' %></td>
+  <td><%= link_to image_tag("edit.gif"), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => <$managedObjectClassName.lowercaseString$>, :action => 'edit' %></td>
+  <td><%= link_to image_tag("delete.png"), <$managedObjectClassName.lowercaseString$>, :confirm => 'Are you sure?', :method => :delete %></td>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=<$if Attribute.isDate $>l<$else$>h<$endif$> <$
+		managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$><$if Attribute.isDate $>, :format => :short<$endif$> rescue nil %></td><$endif$><$endforeach do$>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New <$managedObjectClassName.pluralize.sentencize.initialCapitalString$>', new_<$managedObjectClassName.underscorize$>_path %>
+<%= link_to t('new', :model => <$managedObjectClassName.initialCapitalString$>.human_name), new_<$managedObjectClassName.underscorize$>_path %>

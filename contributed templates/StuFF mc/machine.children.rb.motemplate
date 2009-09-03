@@ -1,13 +1,25 @@
-<div class="item">
+<div class="<$destinationEntity.managedObjectClassName.singularize.underscorize$>">
 	<table>
-	<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$destinationEntity.managedObjectClassName.singularize.underscorize$> do |<$destinationEntity.managedObjectClassName.singularize.underscorize$>_form| %>
-	<$foreach Attribute destinationEntity.noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
-		<tr><td><$ Attribute.name.singularize.sentencize.initialCapitalString $>: </td><td><%= <$destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ Attribute.name.underscorize $> %><td></tr><$endif$><$endforeach do$>
-	<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$if !RelationshipChildren.isToMany$>
-		<tr><td><$RelationshipChildren.name.initialCapitalString$>: </td><td><%= <$destinationEntity.managedObjectClassName.singularize.underscorize$>_form.collection_select :id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><$endif$><$endforeach do$>
+		<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
+		inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.singularize.underscorize$>_form| %>
+		<$foreach Attribute destinationEntity.noninheritedAttributes do$><$
+			if !Attribute.isTimeStamp
+				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= <$
+				destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ 
+				  Attribute.name.underscorize $> %><td></tr><$
+			endif$><$
+		endforeach do$>
+		<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$
+			if !RelationshipChildren.isToMany && RelationshipChildren.destinationEntity.hasSpecificCustomClass$>
+				<tr><td><%= <$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
+				  destinationEntity.managedObjectClassName.singularize.underscorize$>_form.collection_select :<$
+				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><$
+			endif$><$
+		endforeach do$>
 	</table>
 
-		<%= link_to_function "Remove this <$destinationEntity.managedObjectClassName.sentencize$>", "this.up('.item').remove()" %><hr />
+		<div align="right"><%= link_to_function t('Remove this', :model => '<$destinationEntity.managedObjectClassName.sentencize$>'), "this.up('.<$
+		destinationEntity.managedObjectClassName.singularize.underscorize$>').remove()" %></div><hr />
 		
 	<% end %>
 </div>

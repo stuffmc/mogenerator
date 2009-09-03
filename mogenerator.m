@@ -19,6 +19,9 @@ NSString	*gCustomBaseClass;
 		return gCustomBaseClass ? YES : NO;
 	}
 }
+- (BOOL)hasSpecificCustomClass {
+	return !([[self managedObjectClassName] isEqualToString:@"NSManagedObject"] ||	[[self managedObjectClassName] isEqualToString:gCustomBaseClass]);
+}
 - (NSString*)customSuperentity {
 	NSEntityDescription *superentity = [self superentity];
 	if (superentity) {
@@ -215,6 +218,9 @@ NSString	*gCustomBaseClass;
 }
 - (BOOL)isBinaryData {
 	return (self.attributeType == NSBinaryDataAttributeType);
+}
+- (BOOL)isDate {
+	return (self.attributeType == NSDateAttributeType);
 }
 - (NSString*)railsHTMLFormType {
 	if ([self attributeType] != NSTransformableAttributeType) {
@@ -440,6 +446,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *machineModelRB;
 		MiscMergeEngine *machinePartialRB;
 		MiscMergeEngine *machineChildrenRB;
+		MiscMergeEngine *machineChildrenExistingRB;
 		MiscMergeEngine *machineEditRB;
 		MiscMergeEngine *machineIndexRB;
 		MiscMergeEngine *machineNewRB;
@@ -462,6 +469,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			assert(machinePartialRB);
 			machineChildrenRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.children.rb.motemplate"]);
 			assert(machineChildrenRB);
+			machineChildrenExistingRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.existing.rb.motemplate"]);
+			assert(machineChildrenExistingRB);
 			machineEditRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.edit.rb.motemplate"]);
 			assert(machineEditRB);
 			machineIndexRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.index.rb.motemplate"]);
@@ -497,8 +506,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		nsenumerate ([model entities], NSEntityDescription, entity) {
 			NSString *entityClassName = [entity managedObjectClassName];
             
-			if ([entityClassName isEqualToString:@"NSManagedObject"] ||
-				[entityClassName isEqualToString:gCustomBaseClass]){
+			if (![entity hasSpecificCustomClass]){
 				ddprintf(@"skipping entity %@ because it doesn't use a custom subclass.\n", 
                          entityClassName);
 				continue;
@@ -579,6 +587,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 					for (NSRelationshipDescription *children in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
 						if ([children isToMany]) {
 							machineDirtied = [self processEntity:children forMachine:machineChildrenRB	withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
+							machineDirtied = [self processEntity:children forMachine:machineChildrenExistingRB	withFileName:[NSString stringWithFormat:@"/_children_%@_existing", [[[entity managedObjectClassName] pluralize] underscorize]]];
 //							ddprintf(@"\n::CHILD: %@\n", [[children destinationEntity] name]);
 						}
 					}
@@ -636,7 +645,6 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	return error;
 }
 
-//- (BOOL)processEntity:(NSEntityDescription *)entity forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 - (BOOL)processEntity:(id)entityModelOrRelationShip forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName {
 
 	NSString *entityClassName = nil;
@@ -651,35 +659,44 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	}
 	NSString *generatedMachine = [machine executeWithObject:(entityModelOrRelationShip)?(id)entityModelOrRelationShip:(id)model sender:nil];
 
-//	ddprintf(@"\nrails entityClassName: %@ - fileName: %@ - generatedMachine: %@", entityClassName, fileName); //, generatedMachine);
-
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *machineRBFileName;
 	NSString *machineDirToCreate = nil;
 	NSString *currentMachineDir;
 	
+	NSString *directoryEntity;
+	NSMutableString *fileNameDirectoryEntity;
 	if ([fileName hasPrefix:@"/"]) {
-		NSString *directoryEntity;
-		if ([fileName hasPrefix:@"/_children_"]) {
-			directoryEntity = [fileName substringFromIndex:11];
+		NSString *childrenString = @"/_children_";
+		if ([fileName hasPrefix:childrenString]) {
+			directoryEntity = [fileName substringFromEndOfString:childrenString];
+			fileNameDirectoryEntity = [[directoryEntity singularize] mutableCopy];
+//			NSLog(@"directoryEntity 1: %@ \n",  directoryEntity);
+//			NSLog(@"fileNameDirectoryEntity 1: %@ \n",  fileNameDirectoryEntity);
+			NSString *existingString = @"_existing";
+			if ([directoryEntity containsString:existingString]) {
+				[[[directoryEntity singularize] mutableCopy] appendString:existingString];
+				directoryEntity = [directoryEntity substringToString:existingString];
+			}
+//			NSLog(@"directoryEntity 2: %@ \n",  directoryEntity);
+//			NSLog(@"fileNameDirectoryEntity 2: %@ \n",  fileNameDirectoryEntity);
+//			NSLog(@"\ndirectoryEntity: %@ \n[fileName substringFromEndOfString:childrenString]: %@ \n[[fileName substringFromEndOfString:childrenString] substringToString:@_existing]:%@", 
+//				  directoryEntity, [fileName substringFromEndOfString:childrenString], [[fileName substringFromEndOfString:childrenString] substringToString:@"_existing"]);
 		} else {
 			directoryEntity = [entityClassName pluralize];
 		}
 		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:directoryEntity];
-//		ddprintf(@"\n!!!machineDirToCreate: %@ - ENTITY: %@ - plural: %@", machineDirToCreate, entityClassName, [entityClassName pluralize]);
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
 		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
 		rand(); rand(); rand();
-//		NSLog(@"DATE: %d%02d%02d%.0f", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000));
 		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), [entityClassName pluralize]];
 	}
 
 	if (machineDirToCreate) {
 		if (![fm directoryExistsAtPath:machineDirToCreate]) {
 			// Create the directory if it doesn't exist already
-	//		ddprintf(@"[machineDir stringByAppendingPathComponent:entityClassName]: %@", [machineDir stringByAppendingPathComponent:entityClassName]);
 			if ([fm createDirectoryAtPath:machineDirToCreate attributes:nil]) {
 				currentMachineDir = machineDirToCreate;
 			} else {
@@ -688,20 +705,16 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		}
 		if ([fileName hasPrefix:@"/_"])	{
 			if ([fileName hasPrefix:@"/_children"]) {
-				fileName = [NSString stringWithFormat:@"/_%@.html.erb", entityClassName];
-//				ddprintf(@"\nrails entityClassName: %@ - fileName: %@ - generatedMachine: %@", entityClassName, fileName, generatedMachine);
+				fileName = [NSString stringWithFormat:@"/_%@_%@.html.erb", fileNameDirectoryEntity, entityClassName];
 			} else {
 				fileName = [NSString stringWithFormat:@"/_%@%@", entityClassName, [fileName substringFromIndex:2]];
 			}
-//			ddprintf(@"\nfileName: %@", fileName);
 		}
 		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
-//		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
 	} else {
 		if (entityClassName) {
 			if ([fileName containsString:@"controller"]) {
 				currentMachineDir = [machineDirRB stringByAppendingPathComponent:@"controllers"];
-				//			ddprintf(@"\n entityClassName: %@ = %@", entityClassName, [entityClassName pluralize]);
 				entityClassName = [entityClassName pluralize];
 			} else {
 				currentMachineDir = [machineDirRB stringByAppendingPathComponent:@"models"];
@@ -712,25 +725,19 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		} else {
 			machineRBFileName = [railsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", fileName]];
 		}
-//		ddprintf(@"\n***machineRBFileName: %@", machineRBFileName);
 	}
 
 	
-//	ddprintf(@"\n%s -- entityClassName = %@ -- machineRBFileName = %@", _cmd, entityClassName, machineRBFileName);
 	NSError *error = nil;
 	BOOL machineDirtied = NO;
 	
 	if (![fm regularFileExistsAtPath:machineRBFileName] || ![generatedMachine isEqualToString:[NSString stringWithContentsOfFile:machineRBFileName encoding:NSUTF8StringEncoding error:&error]]) {
 		if (![self outputError:error]) {
-//			ddprintf(@"\nAFTER 1st error");
 			//	If the file doesn't exist or is different than what we just generated, write it out.
 			[generatedMachine writeToFile:machineRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
 			if (![self outputError:error]) {
-//				ddprintf(@"\nAFTER 2nd error");
 				machineDirtied = YES;
 				machineFilesGenerated++;
-//			} else {
-//				ddprintf(@"generatedMachine: %@", generatedMachine);
 			}
 
 		}

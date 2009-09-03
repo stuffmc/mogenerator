@@ -1,5 +1,5 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
-<%=h content_for(:title, "Editing <$managedObjectClassName.sentencize$>") %>
+<%=h content_for(:title, t('Editing Record', :editing => t('editing'), :model => t('<$managedObjectClassName.underscorize$>', :count => 1))) %>
 <% partial_button 'Update <$managedObjectClassName.lowercaseString$>' %>
 
 <h1><%= yield(:title) %></h1>
