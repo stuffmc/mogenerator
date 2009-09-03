@@ -6,4 +6,4 @@
 
 <%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 
-<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
+<%= link_to t('back'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

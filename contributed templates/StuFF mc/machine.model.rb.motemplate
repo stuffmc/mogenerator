@@ -1,9 +1,10 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
 # Make changes to <$managedObjectClassName$>.rb instead.
+require '<$managedObjectClassName.underscorize$>_human'
 
 class <$managedObjectClassName$> < ActiveRecord::Base
 
-	#Associations<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	#Associations<$foreach Relationship noninheritedRelationships do$><$ if Relationship.destinationEntity.hasSpecificCustomClass$><$if Relationship.isToMany$>
 	has_many :<$Relationship.name.underscorize$>	
 	after_save :save_<$Relationship.name.underscorize$>
 	
@@ -36,7 +37,7 @@ class <$managedObjectClassName$> < ActiveRecord::Base
     # @<$Relationship.name.singularize.underscorize$>.save
   end
 	<$else$>
-	belongs_to :<$Relationship.name$><$endif$><$endforeach do$>
+	belongs_to :<$Relationship.name$><$endif$><$endif$><$endforeach do$>
 
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.isBinaryData $>has_attached_file		:<$Attribute.name.underscorize$>, :styles => {:s320x180 => "320x180>", :s205x160 => '205x160', :s50x50 => "50x50>", :s142x81 => "142x81>"}
 #	validates_attachment_presence	:<$Attribute.name.underscorize$>

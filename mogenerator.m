@@ -190,6 +190,9 @@ NSString	*gCustomBaseClass;
 			return nil;
 	}
 }
+- (BOOL)railsAttributeIsString {
+	return [self attributeType] == NSStringAttributeType;
+}
 - (NSString*)railsAttributeType {
 	switch ([self attributeType]) {
 		case NSInteger16AttributeType:
@@ -454,7 +457,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *machineMigrateRB;
 		MiscMergeEngine *machineRoutesRB;
 		MiscMergeEngine *machineAppLayoutRB;
-		MiscMergeEngine *humanRB;
+		MiscMergeEngine *humanModelRB;
 		
 		if (railsDir) {
 //			NSString *path = [self appSupportFileNamed:@"ActiveSupportInflector/ActiveSupportInflector.plist"];
@@ -488,9 +491,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			machineAppLayoutRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.application.html.erb.motemplate"]);
 			assert(machineAppLayoutRB);
 			
-			// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-			humanRB = engineWithTemplatePath([self appSupportFileNamed:@"human.rb.motemplate"]);
-			assert(humanRB);
+			// TODO: Add other human, not only the model.
+			humanModelRB = engineWithTemplatePath([self appSupportFileNamed:@"human.model.rb.motemplate"]);
+			assert(humanModelRB);
 			
 			machineDirRB = [railsDir stringByAppendingPathComponent:@"app"];
 		}
@@ -599,19 +602,19 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineShowRB		withFileName:@"/show.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
 
-				// TODO: Add human RB's, not crucial for the moment since I'll have them empty during the dev.
-//				NSString *generatedHumanRB = [humanRB executeWithObject:entity sender:nil];
-//				NSString *humanRBFileName = [humanDir stringByAppendingPathComponent:
-//											 [NSString stringWithFormat:@"%@.rb", entityClassName]];
-//				if ([fm regularFileExistsAtPath:humanRBFileName]) {
-//					if (machineDirtied)
-//						[fm touchPath:humanRBFileName];
-//				} else {
-//					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-//					if (![self outputError:error]) {
-//						humanFilesGenerated++;
-//					}
-//				}
+				// TODO: Add other human files, not only the model...
+				NSString *generatedHumanRB = [humanModelRB executeWithObject:entity sender:nil];
+				NSString *humanRBFileName = [machineDirRB stringByAppendingPathComponent:
+											 [NSString stringWithFormat:@"models/%@_human.rb", [entityClassName underscorize]]];
+				if ([fm regularFileExistsAtPath:humanRBFileName]) {
+					if (machineDirtied)
+						[fm touchPath:humanRBFileName];
+				} else {
+					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+					if (![self outputError:error]) {
+						humanFilesGenerated++;
+					}
+				}
 				
 			}
 		} 

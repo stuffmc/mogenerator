@@ -1,0 +1,4 @@
+class <$managedObjectClassName$> < ActiveRecord::Base	  
+	  # Your custome code here - this file won't be overriden by mo(rails)generator.
+	  
+end

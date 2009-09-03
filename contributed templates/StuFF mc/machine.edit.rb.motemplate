@@ -6,5 +6,5 @@
 
 <%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 
-<%= link_to 'Show', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
-<%= link_to 'Back', :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
+<%= link_to t('show'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
+<%= link_to t('back'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

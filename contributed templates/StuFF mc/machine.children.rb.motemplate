@@ -19,7 +19,7 @@
 		endforeach do$>
 	</table>
 
-		<div align="right"><%= link_to_function t('Remove this', :model => '<$destinationEntity.managedObjectClassName.sentencize$>'), "this.up('.<$
+		<div align="right"><%= link_to_function t('Remove this', :model => t('<$destinationEntity.managedObjectClassName.underscorize$>', :count => 1)), "this.up('.<$
 		destinationEntity.managedObjectClassName.singularize.underscorize$>').remove()" %></div><hr />
 		
 	<% end %>

@@ -2,88 +2,88 @@
 # Make changes to <$managedObjectClassName$>_controller.rb instead.
 
 class <$managedObjectClassName.pluralize$>Controller < ApplicationController
-  # GET /<$managedObjectClassName.lowercaseString$>
-  # GET /<$managedObjectClassName.lowercaseString$>.xml
+  # GET /<$managedObjectClassName.underscorize$>
+  # GET /<$managedObjectClassName.underscorize$>.xml
   def index
     @<$managedObjectClassName.pluralize.underscorize$> = <$managedObjectClassName$>.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>s }
+      format.xml  { render :xml => @<$managedObjectClassName.underscorize$>s }
     end
   end
 
-  # GET /<$managedObjectClassName.lowercaseString$>s/1
-  # GET /<$managedObjectClassName.lowercaseString$>s/1.xml
+  # GET /<$managedObjectClassName.underscorize$>s/1
+  # GET /<$managedObjectClassName.underscorize$>s/1.xml
   def show
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+      format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }
     end
   end
 
-  # GET /<$managedObjectClassName.lowercaseString$>s/new
-  # GET /<$managedObjectClassName.lowercaseString$>s/new.xml
+  # GET /<$managedObjectClassName.underscorize$>s/new
+  # GET /<$managedObjectClassName.underscorize$>s/new.xml
   def new
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.new
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
     # 0.times {@<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build}<$endif$><$endforeach do$>
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$> }
+      format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }
     end
   end
 
-  # GET /<$managedObjectClassName.lowercaseString$>s/1/edit
+  # GET /<$managedObjectClassName.underscorize$>s/1/edit
   def edit
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.find(params[:id])
   end
 
-  # POST /<$managedObjectClassName.lowercaseString$>s
-  # POST /<$managedObjectClassName.lowercaseString$>s.xml
+  # POST /<$managedObjectClassName.underscorize$>s
+  # POST /<$managedObjectClassName.underscorize$>s.xml
   def create
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new(params[:<$managedObjectClassName.lowercaseString$>])
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.new(params[:<$managedObjectClassName.underscorize$>])
 
     respond_to do |format|
-      if @<$managedObjectClassName.lowercaseString$>.save
+      if @<$managedObjectClassName.underscorize$>.save
         flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully created.'
-        format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
-        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>, :status => :created, :location => @<$managedObjectClassName.lowercaseString$> }
+        format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
+        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>, :status => :created, :location => @<$managedObjectClassName.underscorize$> }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /<$managedObjectClassName.lowercaseString$>s/1
-  # PUT /<$managedObjectClassName.lowercaseString$>s/1.xml
+  # PUT /<$managedObjectClassName.underscorize$>s/1
+  # PUT /<$managedObjectClassName.underscorize$>s/1.xml
   def update
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.find(params[:id])
 
     respond_to do |format|
-      if @<$managedObjectClassName.lowercaseString$>.update_attributes(params[:<$managedObjectClassName.lowercaseString$>])
+      if @<$managedObjectClassName.underscorize$>.update_attributes(params[:<$managedObjectClassName.underscorize$>])
         flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully updated.'
-        format.html { redirect_to(@<$managedObjectClassName.lowercaseString$>) }
+        format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @<$managedObjectClassName.lowercaseString$>.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /<$managedObjectClassName.lowercaseString$>s/1
-  # DELETE /<$managedObjectClassName.lowercaseString$>s/1.xml
+  # DELETE /<$managedObjectClassName.underscorize$>s/1
+  # DELETE /<$managedObjectClassName.underscorize$>s/1.xml
   def destroy
-    @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.find(params[:id])
-    @<$managedObjectClassName.lowercaseString$>.destroy
+    @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.find(params[:id])
+    @<$managedObjectClassName.underscorize$>.destroy
 
     respond_to do |format|
-      format.html { redirect_to(:controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index') }
+      format.html { redirect_to(:controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index') }
       format.xml  { head :ok }
     end
   end

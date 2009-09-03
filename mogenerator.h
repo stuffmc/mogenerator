@@ -29,6 +29,7 @@
 - (BOOL)isTimeStamp;
 - (BOOL)hasScalarAttributeType;
 - (NSString*)scalarAttributeType;
+- (BOOL)railsAttributeIsString;
 - (NSString*)railsAttributeType;
 - (BOOL)isBinaryData;
 - (BOOL)isDate;
