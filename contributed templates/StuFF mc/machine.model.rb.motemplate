@@ -9,11 +9,16 @@ class <$managedObjectClassName$> < ActiveRecord::Base
 	
 	def <$Relationship.name.singularize.underscorize$>_attributes=(<$Relationship.name.singularize.underscorize$>_attributes)
 		<$Relationship.name.singularize.underscorize$>_attributes.each do |a|
-		  if a[:<$Relationship.name.singularize.underscorize$>_id].blank?
+		  if a[:id].blank?
   			<$Relationship.name.underscorize$>.build(a)
       else
-        #@<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_sql(["SELECT * FROM <$Relationship.name.underscorize$> WHERE id = ?", a[:<$Relationship.name.singularize.underscorize$>_id].to_i])
-        @<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_id(a[:<$Relationship.name.singularize.underscorize$>_id])
+        @<$Relationship.name.singularize.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_sql(["SELECT * FROM <$Relationship.name.underscorize$> WHERE id = ?", a[:id].to_i])
+        # @<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_id(a[:<$Relationship.name.singularize.underscorize$>_id])
+        if @<$Relationship.name.underscorize$>_found.nil?
+          @<$Relationship.name.underscorize$>_found = @<$Relationship.name.singularize.underscorize$>_found
+        else
+          @<$Relationship.name.underscorize$>_found += @<$Relationship.name.singularize.underscorize$>_found
+        end            
 
         #@<$Relationship.name.singularize.underscorize$> = <$Relationship.name.underscorize$>_found[0]
 			end

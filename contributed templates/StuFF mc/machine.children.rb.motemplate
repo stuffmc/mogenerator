@@ -11,9 +11,10 @@
 		endforeach do$>
 		<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$
 			if !RelationshipChildren.isToMany && RelationshipChildren.destinationEntity.hasSpecificCustomClass$>
-				<tr><td><%= <$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
+				<% if "<$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>".downcase != "<$ inverseRelationship.name $>" %><tr><td><%= <$
+				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
 				  destinationEntity.managedObjectClassName.singularize.underscorize$>_form.collection_select :<$
-				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><$
+				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><% end %><$
 			endif$><$
 		endforeach do$>
 	</table>

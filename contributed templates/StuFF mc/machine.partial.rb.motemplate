@@ -23,7 +23,7 @@
 		<%#= render :partial => 'item', :collection => @<$managedObjectClassName.underscorize$>.items %>
 		</div>
 		+ <%= link_to_function t("existing") do |page|
-			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize$>', :object => Item.new #, :locals => { :f => f }
+			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize$>', :object => Item.new #, :object => @person , :locals => { :f => f }
 		end %> <%= t :or %> <%= link_to_function t('new', :model => t('<$children.name.underscorize$>', :count => 1)) do |page|
 				page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$children.name.underscorize$>', :object => <$children.name.initialCapitalString$>.new
 			end %>

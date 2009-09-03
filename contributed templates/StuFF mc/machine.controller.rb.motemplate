@@ -29,7 +29,7 @@ class <$managedObjectClassName.pluralize$>Controller < ApplicationController
   def new
     @<$managedObjectClassName.lowercaseString$> = <$managedObjectClassName$>.new
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-    0.times {@<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build}<$endif$><$endforeach do$>
+    # 0.times {@<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build}<$endif$><$endforeach do$>
 
     respond_to do |format|
       format.html # new.html.erb

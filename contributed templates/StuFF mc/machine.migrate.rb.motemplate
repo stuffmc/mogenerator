@@ -1,9 +1,9 @@
 class Create<$managedObjectClassName.pluralize$> < ActiveRecord::Migration
   def self.up
-    create_table :<$managedObjectClassName.pluralize.underscorize$> do |t|
+    create_table  :<$managedObjectClassName.pluralize.underscorize$> do |t|
   		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
-  		<$if Attribute.isBinaryData $>t.string 	:<$Attribute.name.underscorize$>_file_name
-    	t.string 	:<$Attribute.name.underscorize$>_content_type
+  		<$if Attribute.isBinaryData $>t.string 	  :<$Attribute.name.underscorize$>_file_name
+    	t.string 	  :<$Attribute.name.underscorize$>_content_type
 	  	t.integer 	:<$Attribute.name.underscorize$>_file_size<$else$>t.<$Attribute.railsAttributeType$> 	:<$Attribute.name.underscorize $><$endif$><$endif$><$endforeach do$>
   		<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
   		t.integer 	:<$Relationship.name.underscorize$>_id<$endif$><$endforeach do$>
