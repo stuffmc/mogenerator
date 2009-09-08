@@ -9,12 +9,11 @@
   </head>
   <body>
     <div id="container">
-<div class="logo"><div id="menu"><strong>&nbsp;<%= t 'admin.title' %></strong><table>    	<tr>
-     <td>| <$foreach Entity entitiesByName do$><$ if Entity.hasSpecificCustomClass 
-		$><%= link_to t('<$Entity.name.underscorize$>', :count => 2), <$Entity.name.pluralize.underscorize$>_path %> [<%= link_to "+", new_<$
-			Entity.name.underscorize$>_path %>]</td><td> | <$ endif $><$endforeach do$></td>
-    	</tr>
-    	</table></div></div>
+<div class="logo"><div id="menu"><strong>&nbsp;<%= t 'admin.title' %></strong>
+     | <$foreach Entity entitiesByName do$><$ if Entity.hasSpecificCustomClass 
+		$><%= link_to t('<$Entity.name.underscorize$>', :count => 2), <$Entity.name.underscorize.pluralize$>_path %> [<%= link_to "+", new_<$
+			Entity.name.underscorize$>_path %>]
+			 | <$ endif $><$endforeach do$></div></div>
       <%- flash.each do |name, msg| -%>
         <%= content_tag :div, msg, :id => "flash_#{name}" %>
       <%- end -%>

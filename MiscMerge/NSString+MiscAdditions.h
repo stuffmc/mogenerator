@@ -37,7 +37,9 @@ enum
 - (NSString *)underscorize;
 - (NSString *)sentencize;
 - (NSString *)deCamelizeWith:(NSString *)delimiter;
-
+- (NSCharacterSet *)camelcaseDelimiters;
+- (NSString *)camelize;
+	
 /*" Trimming whitespace "*/
 - (id)stringByTrimmingLeadWhitespace;
 - (id)stringByTrimmingTailWhitespace;

@@ -1,0 +1,45 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+en:
+  new: "New {{model}}"
+  create: "Create {{model}}"
+  Listing Record: 
+    one: "{{there_is_only}} 1 {{model}}"
+    other: "{{listing}} {{count}} {{model}}"
+    
+  Editing Record: "{{model}} {{editing}}"
+    
+  there_is_only: 'There is only'
+  listing: "Listing"
+  existing: "existing"
+  or: "or"
+  for_this: "{{children}} for this {{parent}}"
+  confirm: "confirm"
+  Remove this: "Delete this {{model}}"
+  prompt: "Please select"
+  editing: "Editing"
+  show: "Show"
+  edit: "Edit"
+  destroy: "Delete"
+  back: "Back"
+  
+  admin:
+    title: "Administration"
+  
+  <$foreach Entity entitiesByName do$>
+  <$ Entity.name.underscorize $>:
+      one:  "<$ Entity.name $>"
+      other: "<$ Entity.name.underscorize.pluralize.camelize.initialCapitalString.sentencize $>"
+  <$endforeach do$>
+  
+  activerecord:
+    models:
+      <$foreach Entity entitiesByName do$>
+      <$Entity.name.underscorize$>: "<$Entity.name.sentencize$>"<$endforeach do$>
+
+    attributes:
+      <$foreach Entity entitiesByName do$><$Entity.name.underscorize$>:<$foreach Attribute Entity.noninheritedAttributes do$>
+        <$Attribute.name.underscorize$>: "<$Attribute.name.sentencize.initialCapitalString$>"<$endforeach do$>
+       
+      

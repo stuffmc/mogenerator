@@ -1,7 +1,7 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
 <%=h content_for(:title, t('Listing Record', 
-                        :model => t('<$managedObjectClassName.underscorize$>', :count => @<$managedObjectClassName.pluralize.underscorize$>.count), 
-                        :there_is_only => t('there_is_only'), :listing => t('listing'), :count => @<$managedObjectClassName.pluralize.underscorize$>.count)) %>
+                        :model => t('<$managedObjectClassName.underscorize$>', :count => @<$managedObjectClassName.pluralize.underscorize$>.size), 
+                        :there_is_only => t('there_is_only'), :listing => t('listing'), :count => @<$managedObjectClassName.pluralize.underscorize$>.size)) %>
   
 <h1><%= yield(:title) %></h1>
 

@@ -451,9 +451,40 @@ static NSRange _nextSearchRange(NSString *string, unsigned mask,
 	return [[self deCamelizeWith:@"_"] lowercaseString];
 }
 
+- (NSCharacterSet *)camelcaseDelimiters {
+	return [NSCharacterSet characterSetWithCharactersInString:@"-_"];
+}
+
+- (NSString *)camelize {
+	// Largely inspired (actually almost totally) from http://github.com/yfactorial/objectivesupport/raw/78c2c063a3472b0d91db000f1c34747653047911/Classes/lib/Core/Inflections/NSString+InflectionSupport.m
+	unichar *buffer = calloc([self length], sizeof(unichar));
+	[self getCharacters:buffer ];
+	NSMutableString *underscored = [NSMutableString string];
+	
+	BOOL capitalizeNext = NO;
+	NSCharacterSet *delimiters = [self camelcaseDelimiters];
+	for (int i = 0; i < [self length]; i++) {
+		NSString *currChar = [NSString stringWithCharacters:buffer+i length:1];
+		if([delimiters characterIsMember:buffer[i]]) {
+			capitalizeNext = YES;
+		} else {
+			if(capitalizeNext) {
+				[underscored appendString:[currChar uppercaseString]];
+				capitalizeNext = NO;
+			} else {
+				[underscored appendString:currChar];
+			}
+		}
+	}
+	
+	free(buffer);
+	return underscored;
+	
+}
+
 
 - (NSString *)deCamelizeWith:(NSString *)delimiter {
-	// Largely inspired (actually almost totally) from http://github.com/yfactorial/objectivesupport/Classes/lib/Core/Inflections/NSString+InflectionSupport.m 
+	// Largely inspired (actually almost totally) from http://github.com/yfactorial/objectivesupport/raw/78c2c063a3472b0d91db000f1c34747653047911/Classes/lib/Core/Inflections/NSString+InflectionSupport.m
 	unichar *buffer = calloc([self length], sizeof(unichar));
 	[self getCharacters:buffer ];
 	NSMutableString *newString = [NSMutableString string];

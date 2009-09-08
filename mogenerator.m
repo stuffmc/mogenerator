@@ -369,6 +369,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 - (void) setModel: (NSString *) path;
 {
+//	ddprintf(@"THE model: %@", path);
     assert(!model); // Currently we only can load one model.
 
     if( ![[NSFileManager defaultManager] fileExistsAtPath:path]){
@@ -395,7 +396,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
         tempMOMPath = [[NSTemporaryDirectory() stringByAppendingPathComponent:[(id)CFUUIDCreateString(kCFAllocatorDefault, CFUUIDCreate(kCFAllocatorDefault)) autorelease]] stringByAppendingPathExtension:@"mom"];
         system([[NSString stringWithFormat:@"\"%@\" \"%@\" \"%@\"", momc, path, tempMOMPath] UTF8String]); // Ignored system's result -- momc doesn't return any relevent error codes.
         path = tempMOMPath;
+//		ddprintf(@"ASSERT momc:% @", momc);
     }
+//	ddprintf(@"ASSERT model:% @", path);
     model = [[[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]] autorelease];
     assert(model);
 }
@@ -457,6 +460,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		MiscMergeEngine *machineMigrateRB;
 		MiscMergeEngine *machineRoutesRB;
 		MiscMergeEngine *machineAppLayoutRB;
+		
+		MiscMergeEngine *machineLocaleRB;
+		
 		MiscMergeEngine *humanModelRB;
 		
 		if (railsDir) {
@@ -490,6 +496,9 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 						
 			machineAppLayoutRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.application.html.erb.motemplate"]);
 			assert(machineAppLayoutRB);
+			
+			machineLocaleRB = engineWithTemplatePath([self appSupportFileNamed:@"machine.locale.en.yml"]);
+			assert(machineLocaleRB);
 			
 			// TODO: Add other human, not only the model.
 			humanModelRB = engineWithTemplatePath([self appSupportFileNamed:@"human.model.rb.motemplate"]);
@@ -621,6 +630,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 
 		[self processEntity:nil forMachine:machineRoutesRB		withFileName:@"config/routes.rb"];
 		[self processEntity:nil forMachine:machineAppLayoutRB	withFileName:@"app/views/layouts/application.html.erb"];
+		[self processEntity:nil forMachine:machineLocaleRB		withFileName:@"config/locales/en.yml"];
+		
 		
 	}
 	

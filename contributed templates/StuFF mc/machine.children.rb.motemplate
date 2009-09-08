@@ -1,20 +1,22 @@
 <div class="<$destinationEntity.managedObjectClassName.singularize.underscorize$>">
 	<table>
 		<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
-		inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.singularize.underscorize$>_form| %>
+		inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| %>
 		<$foreach Attribute destinationEntity.noninheritedAttributes do$><$
 			if !Attribute.isTimeStamp
 				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= <$
 				destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ 
-				  Attribute.name.underscorize $> %><td></tr><$
+				  Attribute.name.underscorize $> %><td></tr>
+				  <$
 			endif$><$
 		endforeach do$>
 		<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$
 			if !RelationshipChildren.isToMany && RelationshipChildren.destinationEntity.hasSpecificCustomClass$>
 				<% if "<$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>".downcase != "<$ inverseRelationship.name $>" %><tr><td><%= <$
 				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
-				  destinationEntity.managedObjectClassName.singularize.underscorize$>_form.collection_select :<$
-				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr><% end %><$
+				  destinationEntity.managedObjectClassName.underscorize$>_form.collection_select :<$
+				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr>
+				  <% end %><$
 			endif$><$
 		endforeach do$>
 	</table>

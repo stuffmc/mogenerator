@@ -1,6 +1,6 @@
-class Create<$managedObjectClassName.pluralize$> < ActiveRecord::Migration
+class Create<$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalString$> < ActiveRecord::Migration
   def self.up
-    create_table  :<$managedObjectClassName.pluralize.underscorize$> do |t|
+    create_table  :<$managedObjectClassName.underscorize.pluralize.underscorize$> do |t|
   		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
   		<$if Attribute.isBinaryData $>t.string 	  :<$Attribute.name.underscorize$>_file_name
     	t.string 	  :<$Attribute.name.underscorize$>_content_type
