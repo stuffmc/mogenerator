@@ -1,14 +1,16 @@
-<% # TODO: refactor to use partial with show doing the same %>
+<% # TODO: refactor to use partial with show doing the same %><br />
 <% form_for @<$managedObjectClassName.underscorize$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
 	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
 	<tr>
-	    <td><%= <$managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= f.<$Attribute.railsHTMLFormType$> :<$Attribute.name.underscorize$> %></td>
+	    <td><%= <$managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= f.<$ 
+	    if (Attribute.specifiedRailsAttributeType) $>text_area<$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.name.underscorize$>, :class => "styled" %></td>
   	</tr><$endif$><$endforeach do$>
   	
 	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
-	<tr><td><$Relationship.name.initialCapitalString$>: </td><td><%= f.collection_select :id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
+	<tr><td><$Relationship.name.initialCapitalString$>: </td><td><%= 
+	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
 	</tr><$endif$><$endforeach do$>
 	</table>
   <p>
@@ -17,13 +19,14 @@
   	<% if @<$managedObjectClassName.underscorize$>.id == nil %>
 	<$foreach children allToManyRelationships do$>
 	<div id="flash_notice">
-		<h3><%= t :for_this, :children => t('<$children.name.underscorize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
+		<h3><%= t :for_this, :children => t('<$children.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	  	<table>
 		<div id="<$children.name.pluralize.underscorize$>">
 		<%#= render :partial => 'item', :collection => @<$managedObjectClassName.underscorize$>.items %>
 		</div>
 		+ <% if <$children.name.initialCapitalString$>.find_by_<$managedObjectClassName.underscorize$>_id(nil) %> <%= link_to_function t("existing") do |page|
-			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize$>', :object => Item.new #, :object => @person , :locals => { :f => f }
+			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize
+			              $>', :object => Item.new #, :object => @person , :locals => { :f => f }
 		end %> <%= t :or %> <% end %><%= link_to_function t('new', :model => t('<$children.name.underscorize$>', :count => 1)) do |page|
 				page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$children.name.underscorize$>', :object => <$children.name.initialCapitalString$>.new
 			end %>
@@ -36,7 +39,7 @@
 	<% else  %>
 	<$foreach RelationshipShow noninheritedRelationships do$><$if RelationshipShow.isToMany && RelationshipShow.destinationEntity.hasSpecificCustomClass$>
 	<div id="flash_notice">
-	<h3><$RelationshipShow.name.sentencize.initialCapitalString$> for this <$managedObjectClassName.lowercaseString.sentencize$></h3>
+	<h3><%= t :for_this, :children => t('<$RelationshipShow.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %><%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
 	<$endif$><$endforeach do$>
 	<% end %>

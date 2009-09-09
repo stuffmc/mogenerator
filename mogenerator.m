@@ -1,6 +1,7 @@
 /*******************************************************************************
 	mogenerator.m
 		Copyright (c) 2006-2008 Jonathan 'Wolf' Rentzsch: <http://rentzsch.com>
+		This Fork (a.k.a. "morailsgenerator" has been highly modified by mc@stuffmc.com - @stuffmc
 		Some rights reserved: <http://opensource.org/licenses/mit-license.php>
 
 	***************************************************************************/
@@ -9,6 +10,34 @@
 #import "ActiveSupportInflector.h"
 
 NSString	*gCustomBaseClass;
+
+
+@implementation NSManagedObjectModel (userInfo)
+- (NSArray*)entitiesSorted {
+	NSMutableArray *sorted = [[NSMutableArray alloc] init];
+	NSUInteger count = [[self entitiesByName] count];
+	ddprintf(@"**** entity count: %d\n\n", count);
+	for (NSUInteger index = 0 ; index < count ; index++) {
+		ddprintf(@"**** index: %d\n\n", index);
+		[sorted addObject:[self entityForMenuOrder:index]];
+	}
+	return sorted;
+}
+- (NSEntityDescription *)entityForMenuOrder:(NSUInteger)menuOrder {
+	for (NSEntityDescription *entity in [self entities]) {
+		ddprintf(@"**** order: %d\n\n", menuOrder);
+		
+		ddprintf(@"**** allValues: %@\n\n", [[entity userInfo] allValues]);
+		ddprintf(@"**** VALUE: %@\n\n", [[[entity userInfo] allValues] objectAtIndex:0]);
+		
+		if ([[[[entity userInfo] allValues] objectAtIndex:0] intValue] == menuOrder + 1) {
+			ddprintf(@"**** entity: %@\n\n", entity.name);
+			return entity;
+		}
+	}
+	return nil;
+}
+@end
 
 @implementation NSEntityDescription (customBaseClass)
 - (BOOL)hasCustomSuperentity {
@@ -193,6 +222,16 @@ NSString	*gCustomBaseClass;
 - (BOOL)railsAttributeIsString {
 	return [self attributeType] == NSStringAttributeType;
 }
+
+- (NSString*)specifiedRailsAttributeType {
+//	ddprintf(@"[[self userInfo] allKeys]: %@", [[self userInfo] allKeys]);
+	NSString *type = nil;
+	if ([[[self userInfo] allKeys] count]) {
+		type = [[[self userInfo] allKeys] objectAtIndex:0];
+	}
+	return type;
+}
+
 - (NSString*)railsAttributeType {
 	switch ([self attributeType]) {
 		case NSInteger16AttributeType:
@@ -223,6 +262,7 @@ NSString	*gCustomBaseClass;
 	return (self.attributeType == NSBinaryDataAttributeType);
 }
 - (BOOL)isDate {
+//	ddprintf(@"\n\n***ATTRIBUTE USER INFO:%@\n\n", [self attributeKeys]);
 	return (self.attributeType == NSDateAttributeType);
 }
 - (NSString*)railsHTMLFormType {
@@ -242,8 +282,21 @@ NSString	*gCustomBaseClass;
 }
 - (BOOL)isTimeStamp {
 	// This allows the templates to check for the "timestamp" fields used by Rails and thus, not display them.
-	return ([[self name] isEqualToString:@"createdAt"] || [[self name] isEqualToString:@"updatedAt"]);
+	return ([self isCreatedAt] || [self isUpdatedAt]);
 }
+- (BOOL)isUpdatedAt {
+	// This allows the templates to check for the "timestamp" fields used by Rails and thus, not display them.
+	return [[self name] isEqualToString:@"updatedAt"];
+}
+- (BOOL)isCreatedAt {
+	// This allows the templates to check for the "timestamp" fields used by Rails and thus, not display them.
+	return [[self name] isEqualToString:@"createdAt"];
+}
+- (BOOL)isName {
+	// This allows the templates to check for the "name" field to not display them, for example.
+	return [[self name] isEqualToString:@"name"];
+}
+
 - (BOOL)hasDefinedAttributeType {
 	return [self attributeType] != NSUndefinedAttributeType;
 }
@@ -517,6 +570,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		
 		nsenumerate ([model entities], NSEntityDescription, entity) {
 			NSString *entityClassName = [entity managedObjectClassName];
+			
+//			ddprintf(@"\n\n***ENTITY USER INFO:%@\n\n", [entity userInfo]);
             
 			if (![entity hasSpecificCustomClass]){
 				ddprintf(@"skipping entity %@ because it doesn't use a custom subclass.\n", 

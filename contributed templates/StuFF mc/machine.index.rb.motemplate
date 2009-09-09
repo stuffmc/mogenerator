@@ -4,14 +4,21 @@
                         :there_is_only => t('there_is_only'), :listing => t('listing'), :count => @<$managedObjectClassName.pluralize.underscorize$>.size)) %>
   
 <h1><%= yield(:title) %></h1>
+<%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>
 
 <table>
   <tr>
   <th colspan="3" />
   <th>Name</th>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><th><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %></th>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData  && !Attribute.isName && !Attribute.isTimeStamp $>
+	  <th><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %></th>
 	  <$endif$><$endforeach do$>
-  </tr>
+    	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass$>
+    	<th><b><%= <$RelationshipSingle.name.initialCapitalString$>.human_name %></b></th>
+    	<$endif$><$endforeach do$>  
+      <th>Updated at</th>
+	  
+    </tr>
 
 <% @<$managedObjectClassName.pluralize.underscorize$>.each do |<$managedObjectClassName.underscorize$>| %>
   <tr>
@@ -19,12 +26,19 @@
   <td><%= link_to image_tag("edit.gif"), :controller => '<$managedObjectClassName.pluralize.underscorize$>', :id => <$managedObjectClassName.underscorize$>, :action => 'edit' %></td>
   <td><%= link_to image_tag("delete.png"), <$managedObjectClassName.underscorize$>, :confirm => 'Are you sure?', :method => :delete %></td>
   <td><%=h truncate(<$managedObjectClassName.underscorize$>.name, :omission => "...", :length => 30) %></td>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData $><td><%=<$if Attribute.isDate $>l<$else$>h<$endif$> <$ if Attribute.railsAttributeIsString $>truncate(<$endif$><$
-		managedObjectClassName.underscorize$>.<$Attribute.name.underscorize$><$ if Attribute.railsAttributeIsString $>, :omission => "...", :length => 30)<$endif$><$if Attribute.isDate $>, :format => :short<$endif$> rescue nil %></td><$endif$><$endforeach do$>
-  </tr>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isBinaryData && !Attribute.isName && !Attribute.isTimeStamp $><td class="padding"><%=<$if Attribute.isDate $>l<$else$>h<$endif$> <$ if Attribute.railsAttributeIsString $>truncate(<$endif$><$
+		managedObjectClassName.underscorize$>.<$Attribute.name.underscorize$><$ 
+		if Attribute.railsAttributeIsString $>, :omission => "...", :length => 30)<$endif$><$
+		if Attribute.isDate $>, :format => :short<$endif$> rescue nil %></td><$endif$>
+		<$endforeach do$>
+    	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass$>
+    	<td class="padding"><%=h <$managedObjectClassName.underscorize$>.<$RelationshipSingle.name.underscorize$>.name rescue nil %></td>
+    	<$endif$><$endforeach do$>  
+  <td><%=l <$managedObjectClassName.underscorize$>.updated_at, :format => :short %></td>
+  
+      </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>

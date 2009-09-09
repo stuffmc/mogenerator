@@ -16,6 +16,12 @@
 #import "NSString+MiscAdditions.h"
 #import "DDCommandLineInterface.h"
 
+
+@interface NSManagedObjectModel (userInfo)
+- (NSArray*)entitiesSorted;
+- (NSEntityDescription *)entityForMenuOrder:(NSUInteger)menuOrder;
+@end
+
 @interface NSEntityDescription (customBaseClass)
 - (BOOL)hasCustomSuperentity;
 - (BOOL)hasSpecificCustomClass;
@@ -27,8 +33,12 @@
 
 @interface NSAttributeDescription (scalarAttributeType)
 - (BOOL)isTimeStamp;
+- (BOOL)isUpdatedAt;
+- (BOOL)isCreatedAt;
+- (BOOL)isName;
 - (BOOL)hasScalarAttributeType;
 - (NSString*)scalarAttributeType;
+- (NSString*)specifiedRailsAttributeType;
 - (BOOL)railsAttributeIsString;
 - (NSString*)railsAttributeType;
 - (BOOL)isBinaryData;

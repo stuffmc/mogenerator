@@ -1,10 +1,11 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
 <%=h content_for(:title, t('Editing Record', :editing => t('editing'), :model => t('<$managedObjectClassName.underscorize$>', :count => 1))) %>
-<% partial_button 'Update <$managedObjectClassName.lowercaseString$>' %>
+<% partial_button t('update', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)) %>
 
 <h1><%= yield(:title) %></h1>
-
+<p align="right"><%= link_to t('back'), :controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index' %> |
+<%= link_to t('show'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
+<%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>
+</p>
 <%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 
-<%= link_to t('show'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
-<%= link_to t('back'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

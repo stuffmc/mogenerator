@@ -6,7 +6,7 @@
 			if !Attribute.isTimeStamp
 				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= <$
 				destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ 
-				  Attribute.name.underscorize $> %><td></tr>
+				  Attribute.name.underscorize $>, :class => "styled" %><td></tr>
 				  <$
 			endif$><$
 		endforeach do$>
