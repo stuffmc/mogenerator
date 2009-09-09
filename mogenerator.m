@@ -16,22 +16,33 @@ NSString	*gCustomBaseClass;
 - (NSArray*)entitiesSorted {
 	NSMutableArray *sorted = [[NSMutableArray alloc] init];
 	NSUInteger count = [[self entitiesByName] count];
-	ddprintf(@"**** entity count: %d\n\n", count);
+//	ddprintf(@"**** entity count: %d\n\n", count);
 	for (NSUInteger index = 0 ; index < count ; index++) {
-		ddprintf(@"**** index: %d\n\n", index);
-		[sorted addObject:[self entityForMenuOrder:index]];
+//		ddprintf(@"**** index: %d\n\n", index);
+		NSEntityDescription *entitySorted = [self entityForMenuOrder:index];
+		if (entitySorted) {
+			[sorted addObject:entitySorted];
+		}
 	}
+	
+//	ddprintf(@"***allKeys: %@", [[self entitiesByName] allKeys]);
+	for (NSUInteger index = 0 ; index < count ; index++) {
+		//		ddprintf(@"**** index: %d\n\n", index);
+		if (![self entityForMenuOrder:index]) {
+			[sorted addObject:[[self entities] objectAtIndex:index]];
+		}
+	}
+//	ddprintf(@"**** sorted: %@\n\n", sorted);
 	return sorted;
 }
 - (NSEntityDescription *)entityForMenuOrder:(NSUInteger)menuOrder {
 	for (NSEntityDescription *entity in [self entities]) {
-		ddprintf(@"**** order: %d\n\n", menuOrder);
-		
-		ddprintf(@"**** allValues: %@\n\n", [[entity userInfo] allValues]);
-		ddprintf(@"**** VALUE: %@\n\n", [[[entity userInfo] allValues] objectAtIndex:0]);
-		
-		if ([[[[entity userInfo] allValues] objectAtIndex:0] intValue] == menuOrder + 1) {
-			ddprintf(@"**** entity: %@\n\n", entity.name);
+//		ddprintf(@"**** order: %d\n\n", menuOrder);
+//		ddprintf(@"**** allValues: %@\n\n", [[entity userInfo] allValues]);
+//		ddprintf(@"**** VALUE: %@\n\n", [[[entity userInfo] allValues] objectAtIndex:0]);
+		NSArray *allValues = [[entity userInfo] allValues];
+		if (allValues && [allValues count] && [[allValues objectAtIndex:0] intValue] == menuOrder + 1) {
+//			ddprintf(@"**** entity: %@\n\n", entity.name);
 			return entity;
 		}
 	}

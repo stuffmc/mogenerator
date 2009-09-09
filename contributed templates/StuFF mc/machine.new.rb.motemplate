@@ -4,6 +4,6 @@
 
 <h1><%= yield(:title) %></h1>
 
-<%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
+<%= render :partial => @<$managedObjectClassName.underscorize$> %>
 
 <%= link_to t('back'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>

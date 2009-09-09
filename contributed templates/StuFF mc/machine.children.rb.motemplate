@@ -4,18 +4,22 @@
 		inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| %>
 		<$foreach Attribute destinationEntity.noninheritedAttributes do$><$
 			if !Attribute.isTimeStamp
-				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= <$
+				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td>
+				<td><%= <$
 				destinationEntity.managedObjectClassName.underscorize$>_form.<$Attribute.railsHTMLFormType$> :<$ 
-				  Attribute.name.underscorize $>, :class => "styled" %><td></tr>
+				  Attribute.name.underscorize $>, :class => "styled" %><td>
+				  </tr>
 				  <$
 			endif$><$
 		endforeach do$>
 		<$foreach RelationshipChildren destinationEntity.noninheritedRelationships do$><$
 			if !RelationshipChildren.isToMany && RelationshipChildren.destinationEntity.hasSpecificCustomClass$>
-				<% if "<$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>".downcase != "<$ inverseRelationship.name $>" %><tr><td><%= <$
+				<% if "<$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>".downcase != "<$ inverseRelationship.name $>" %><tr>
+				  <td><%= <$
 				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
 				  destinationEntity.managedObjectClassName.underscorize$>_form.collection_select :<$
-				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td></tr>
+				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
+				  </tr>
 				  <% end %><$
 			endif$><$
 		endforeach do$>

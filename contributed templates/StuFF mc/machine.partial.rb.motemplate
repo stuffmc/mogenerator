@@ -1,4 +1,6 @@
-<% # TODO: refactor to use partial with show doing the same %><br />
+<% # TODO: refactor to use partial with show doing the same 
+# find_all_by_<$managedObjectClassName.underscorize$>_id.blank?     --- not working :(
+%><br />
 <% form_for @<$managedObjectClassName.underscorize$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
@@ -11,7 +13,8 @@
 	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
 	<tr><td><$Relationship.name.initialCapitalString$>: </td><td><%= 
 	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
-	</tr><$endif$><$endforeach do$>
+	</tr>
+	<$endif$><$endforeach do$>
 	</table>
   <p>
     <%= f.submit yield(:button) %>
@@ -24,9 +27,9 @@
 		<div id="<$children.name.pluralize.underscorize$>">
 		<%#= render :partial => 'item', :collection => @<$managedObjectClassName.underscorize$>.items %>
 		</div>
-		+ <% if <$children.name.initialCapitalString$>.find_by_<$managedObjectClassName.underscorize$>_id(nil) %> <%= link_to_function t("existing") do |page|
+		+ <% unless <$children.name.initialCapitalString$>.find(:all, :conditions => ['<$managedObjectClassName.underscorize$>_id = NULL']) %> <%= link_to_function t("existing") do |page|
 			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize
-			              $>', :object => Item.new #, :object => @person , :locals => { :f => f }
+			              $>', :object => <$children.name.initialCapitalString$>.new #, :object => @person , :locals => { :f => f }
 		end %> <%= t :or %> <% end %><%= link_to_function t('new', :model => t('<$children.name.underscorize$>', :count => 1)) do |page|
 				page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$children.name.underscorize$>', :object => <$children.name.initialCapitalString$>.new
 			end %>
