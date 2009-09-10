@@ -1,12 +1,14 @@
 <div class="<$destinationEntity.managedObjectClassName.singularize.underscorize$>">
 	<table>
-		<% fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
-		inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| %>
+		<% 		
+    # fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
+    # inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| 
+
+    f.fields_for :<$destinationEntity.managedObjectClassName.underscorize.pluralize$> do |<$destinationEntity.managedObjectClassName.underscorize.singularize$>| %>
 		<$foreach Attribute destinationEntity.noninheritedAttributes do$><$
 			if !Attribute.isTimeStamp
 				$><tr><td><%= <$destinationEntity.managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td>
-				<td><%= <$
-				destinationEntity.managedObjectClassName.underscorize$>_form.<$ 
+				<td><%= <$destinationEntity.managedObjectClassName.underscorize.singularize$>.<$ 
   	    if (Attribute.specifiedRailsAttributeType) $>text_area<$ else $><$Attribute.railsHTMLFormType$><$endif$> :<$ 
 				  Attribute.name.underscorize $>, :class => "styled" %><td>
 				  </tr>
@@ -17,8 +19,8 @@
 			if !RelationshipChildren.isToMany && RelationshipChildren.destinationEntity.hasSpecificCustomClass$>
 				<% if "<$RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>".downcase != "<$ inverseRelationship.name $>" %><tr>
 				  <td><%= <$
-				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= <$
-				  destinationEntity.managedObjectClassName.underscorize$>_form.collection_select :<$
+				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= 
+				  <$destinationEntity.managedObjectClassName.underscorize.singularize$>.collection_select :<$
 				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
 				  </tr>
 				  <% end %><$

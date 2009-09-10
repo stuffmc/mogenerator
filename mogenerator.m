@@ -661,15 +661,23 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machinePartialRB		withFileName:@"/_.html.erb"];
 				
+//				NSUInteger i = 0;
+//				ddprintf(@"++entity: %@\n", entityClassName);
 				for (NSEntityDescription *oneEntityFromTheModel in [model entities]) {
+//					NSLog(@"%d**one: %@\n", i++, [oneEntityFromTheModel name]);
 					for (NSRelationshipDescription *children in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
 						if ([children isToMany]) {
-							machineDirtied = [self processEntity:children forMachine:machineChildrenRB	withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
-							machineDirtied = [self processEntity:children forMachine:machineChildrenExistingRB	withFileName:[NSString stringWithFormat:@"/_children_%@_existing", [[[entity managedObjectClassName] pluralize] underscorize]]];
-//							ddprintf(@"\n::CHILD: %@\n", [[children destinationEntity] name]);
+//							ddprintf(@"\n*&*&&* children (%@): %@", [children name], [[[entity managedObjectClassName] pluralize] underscorize]);
+							machineDirtied = [self processEntity:children forMachine:machineChildrenRB	
+													withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
+							machineDirtied = [self processEntity:children forMachine:machineChildrenExistingRB	
+													withFileName:[NSString stringWithFormat:@"/_children_%@_existing", [[[entity managedObjectClassName] pluralize] underscorize]]];
+//							ddprintf(@"\t\t::CHILD: %@\n", [[children destinationEntity] name]);
+//							NSLog(@"---CHILD:\n");
 						}
 					}
 				}
+//				ddprintf(@"   **i = %d\n\n", i);
 				
 				machineDirtied = [self processEntity:entity forMachine:machineEditRB		withFileName:@"/edit.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineIndexRB		withFileName:@"/index.html.erb"];
@@ -745,18 +753,23 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	NSString *currentMachineDir;
 	
 	NSString *directoryEntity;
+//	NSMutableString *directoryEntity;
 	NSMutableString *fileNameDirectoryEntity;
 	if ([fileName hasPrefix:@"/"]) {
 		NSString *childrenString = @"/_children_";
 		if ([fileName hasPrefix:childrenString]) {
-			directoryEntity = [fileName substringFromEndOfString:childrenString];
+			directoryEntity = [[fileName substringFromEndOfString:childrenString] pluralize];
 			fileNameDirectoryEntity = [[directoryEntity singularize] mutableCopy];
-//			NSLog(@"directoryEntity 1: %@ \n",  directoryEntity);
 //			NSLog(@"fileNameDirectoryEntity 1: %@ \n",  fileNameDirectoryEntity);
 			NSString *existingString = @"_existing";
 			if ([directoryEntity containsString:existingString]) {
-				[[[directoryEntity singularize] mutableCopy] appendString:existingString];
-				directoryEntity = [directoryEntity substringToString:existingString];
+//				[[[directoryEntity singularize] mutableCopy] appendString:existingString];
+//				directoryEntity = [NSString stringWithFormat:@"%@%@", [directoryEntity singularize], existingString];
+//				NSLog(@"directoryEntity: %@ \n",  directoryEntity);
+				directoryEntity = [[directoryEntity substringToString:existingString] pluralize];
+//				directoryEntity = [entityClassName pluralize];
+//				ddprintf(@"directoryEntity: %@ \n",  directoryEntity);
+//				NSLog(@"existingString : %@ \n",  existingString);
 			}
 //			NSLog(@"directoryEntity 2: %@ \n",  directoryEntity);
 //			NSLog(@"fileNameDirectoryEntity 2: %@ \n",  fileNameDirectoryEntity);
@@ -765,7 +778,17 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		} else {
 			directoryEntity = [entityClassName pluralize];
 		}
+//		directoryEntity = [entityClassName pluralize];
 		machineDirToCreate = [[machineDirRB stringByAppendingPathComponent:@"views"] stringByAppendingPathComponent:directoryEntity];
+		if ([entityClassName hasPrefix:@"user_stat"]) {
+//			ddprintf(@"fileNameDirectoryEntity: %@ \n",  fileNameDirectoryEntity);
+//			ddprintf(@"=== directoryEntity: %@ \n",  directoryEntity);
+//			ddprintf(@"=== machineDirToCreate: %@\n", machineDirToCreate);
+		} else {
+//			ddprintf(@"\t\t\t\t\t\t\tentityClassName: %@ \n",  entityClassName);
+//			ddprintf(@"fileName: %@\n", fileName);
+		}
+
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
@@ -786,11 +809,13 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		if ([fileName hasPrefix:@"/_"])	{
 			if ([fileName hasPrefix:@"/_children"]) {
 				fileName = [NSString stringWithFormat:@"/_%@_%@.html.erb", fileNameDirectoryEntity, entityClassName];
+//				machineDirToCreate = machineDirToCreate.pluralize;
 			} else {
 				fileName = [NSString stringWithFormat:@"/_%@%@", entityClassName, [fileName substringFromIndex:2]];
 			}
 		}
 		machineRBFileName = [machineDirToCreate stringByAppendingPathComponent:fileName];
+//		ddprintf(@"fileName: %@\n", machineRBFileName);
 	} else {
 		if (entityClassName) {
 			if ([fileName containsString:@"controller"]) {

@@ -7,36 +7,37 @@ class <$managedObjectClassName$> < ActiveRecord::Base
 	<$foreach Relationship noninheritedRelationships do$><$ if Relationship.destinationEntity.hasSpecificCustomClass$>
 	# attr_accessible :<$Relationship.name.underscorize$><$if Relationship.isToMany$>
 	has_many :<$Relationship.name.underscorize$>	
-	after_save :save_<$Relationship.name.underscorize$>
+	accepts_nested_attributes_for :<$Relationship.name.underscorize$>
+  # after_save :save_<$Relationship.name.underscorize$>
 	
-	def <$Relationship.name.singularize.underscorize$>_attributes=(<$Relationship.name.singularize.underscorize$>_attributes)
-		<$Relationship.name.singularize.underscorize$>_attributes.each do |a|
-		  if a[:id].blank?
-  			<$Relationship.name.underscorize$>.build(a)
-      else
-        @<$Relationship.name.singularize.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_sql(["SELECT * FROM <$Relationship.name.underscorize$> WHERE id = ?", a[:id].to_i])
-        # @<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_id(a[:<$Relationship.name.singularize.underscorize$>_id])
-        if @<$Relationship.name.underscorize$>_found.nil?
-          @<$Relationship.name.underscorize$>_found = @<$Relationship.name.singularize.underscorize$>_found
-        else
-          @<$Relationship.name.underscorize$>_found += @<$Relationship.name.singularize.underscorize$>_found
-        end            
-
-        #@<$Relationship.name.singularize.underscorize$> = <$Relationship.name.underscorize$>_found[0]
-			end
-		end
-	end
-
-  def save_<$Relationship.name.underscorize$>
-    if (!@<$Relationship.name.underscorize$>_found.nil?)
-      @<$Relationship.name.underscorize$>_found.each do |i|
-        i.<$managedObjectClassName.underscorize$>_id = id;
-        i.save
-      end
-    end
-    # @<$Relationship.name.singularize.underscorize$>.<$managedObjectClassName.underscorize$>_id = id;
-    # @<$Relationship.name.singularize.underscorize$>.save
-  end
+  # def <$Relationship.name.singularize.underscorize$>_attributes=(<$Relationship.name.singularize.underscorize$>_attributes)
+  #   <$Relationship.name.singularize.underscorize$>_attributes.each do |a|
+  #     if a[:id].blank?
+  #         <$Relationship.name.underscorize$>.build(a)
+  #       else
+  #         @<$Relationship.name.singularize.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_sql(["SELECT * FROM <$Relationship.name.underscorize$> WHERE id = ?", a[:id].to_i])
+  #         # @<$Relationship.name.underscorize$>_found = <$Relationship.name.underscorize$>.find_by_id(a[:<$Relationship.name.singularize.underscorize$>_id])
+  #         if @<$Relationship.name.underscorize$>_found.nil?
+  #           @<$Relationship.name.underscorize$>_found = @<$Relationship.name.singularize.underscorize$>_found
+  #         else
+  #           @<$Relationship.name.underscorize$>_found += @<$Relationship.name.singularize.underscorize$>_found
+  #         end            
+  # 
+  #         #@<$Relationship.name.singularize.underscorize$> = <$Relationship.name.underscorize$>_found[0]
+  #     end
+  #   end
+  # end
+  # 
+  #   def save_<$Relationship.name.underscorize$>
+  #     if (!@<$Relationship.name.underscorize$>_found.nil?)
+  #       @<$Relationship.name.underscorize$>_found.each do |i|
+  #         i.<$managedObjectClassName.underscorize$>_id = id;
+  #         i.save
+  #       end
+  #     end
+  #     # @<$Relationship.name.singularize.underscorize$>.<$managedObjectClassName.underscorize$>_id = id;
+  #     # @<$Relationship.name.singularize.underscorize$>.save
+  #   end
 	<$else$>
 	belongs_to :<$Relationship.name$><$endif$><$endif$><$endforeach do$>
 

@@ -33,8 +33,8 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
   def new
     @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.new
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-    # 0.times {@<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build}<$endif$><$endforeach do$>
-
+    @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build
+  <$endif$><$endforeach do$>
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }

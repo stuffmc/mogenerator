@@ -23,17 +23,18 @@
 	<$foreach children allToManyRelationships do$>
 	<div id="flash_notice">
 		<h3><%= t :for_this, :children => t('<$children.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
-	  	<table>
-		<div id="<$children.name.pluralize.underscorize$>">
+	  	<!--table-->
+     <div id="<$children.name.pluralize.underscorize$>"></div>
 		<%#= render :partial => 'item', :collection => @<$managedObjectClassName.underscorize$>.items %>
-		</div>
+		<!--/div-->
 		+ <% unless <$children.name.initialCapitalString$>.find(:all, :conditions => ['<$managedObjectClassName.underscorize$>_id = NULL']) %> <%= link_to_function t("existing") do |page|
 			page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$children.name.underscorize
 			              $>', :object => <$children.name.initialCapitalString$>.new #, :object => @person , :locals => { :f => f }
 		end %> <%= t :or %> <% end %><%= link_to_function t('new', :model => t('<$children.name.underscorize$>', :count => 1)) do |page|
-				page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$children.name.underscorize$>', :object => <$children.name.initialCapitalString$>.new
+				page.insert_html :bottom, :<$children.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$children.name.underscorize$>', 
+				:object => <$children.name.initialCapitalString$>.new, :locals => { :f => f }
 			end %>
-  		</table>
+  		<!--/table-->
 	</div>
 	<p>
 	<%= f.submit yield(:button) %>
@@ -44,7 +45,8 @@
 	<div id="flash_notice">
 	<h3><%= t :for_this, :children => t('<$RelationshipShow.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %>
-	<%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', 
+	[ <%= link_to t('edit'), :controller => '<$RelationshipShow.name.underscorize$>', 
+	      :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'edit'%> ]  <%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', 
 	      :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
 	<$endif$><$endforeach do$>
 	<% end %>
