@@ -24,6 +24,9 @@ en:
   destroy: "Delete"
   back: "Back"
   
+  was_successfully_created: "{{model}} was successfully created."
+  was_successfully_updated: "{{model}} was successfully updated." 
+  
   admin:
     title: "Administration"
   

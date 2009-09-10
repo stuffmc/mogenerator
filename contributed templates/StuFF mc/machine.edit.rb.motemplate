@@ -3,9 +3,10 @@
 <% partial_button t('update', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)) %>
 
 <h1><%= yield(:title) %></h1>
-<p align="right"><%= link_to t('back'), :controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index' %> |
-<%= link_to t('show'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
-<%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>
-</p>
+<div class="menu">
+  <%= link_to t('back'), :controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index' %> |
+  <%= link_to t('show'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'show' %> |
+  <%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>
+</div>
 <%= render :partial => @<$managedObjectClassName.lowercaseString$> %>
 

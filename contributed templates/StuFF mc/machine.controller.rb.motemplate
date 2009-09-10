@@ -5,7 +5,11 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
   # GET /<$managedObjectClassName.underscorize$>
   # GET /<$managedObjectClassName.underscorize$>.xml
   def index
-    @<$managedObjectClassName.pluralize.underscorize$> = <$managedObjectClassName$>.all
+  	if (params["order"].blank?)
+      @<$managedObjectClassName.pluralize.underscorize$> = <$managedObjectClassName$>.all
+	  else
+	   	@<$managedObjectClassName.pluralize.underscorize$> = <$managedObjectClassName$>.all(:order => params["order"])
+		end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,7 +53,7 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
 
     respond_to do |format|
       if @<$managedObjectClassName.underscorize$>.save
-        flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully created.'
+        flash[:notice] = t :was_successfully_created, :model => t('<$managedObjectClassName.underscorize$>', :count => 1)
         format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
         format.xml  { render :xml => @<$managedObjectClassName.underscorize$>, :status => :created, :location => @<$managedObjectClassName.underscorize$> }
       else
@@ -66,7 +70,7 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
 
     respond_to do |format|
       if @<$managedObjectClassName.underscorize$>.update_attributes(params[:<$managedObjectClassName.underscorize$>])
-        flash[:notice] = '<$managedObjectClassName.sentencize$> was successfully updated.'
+        flash[:notice] = t :was_successfully_updated, :model => t('<$managedObjectClassName.underscorize$>', :count => 1)
         format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
         format.xml  { head :ok }
       else

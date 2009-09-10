@@ -11,8 +11,8 @@
   	</tr><$endif$><$endforeach do$>
   	
 	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
-	<tr><td><$Relationship.name.initialCapitalString$>: </td><td><%= 
-	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
+	<tr><td><%= t('<$Relationship.name.underscorize$>', :count => 1)%>: </td><td><%= 
+	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.name.initialCapitalString$>.all(:order => "UPPER(name)"), :id, :name, {:prompt => true} %></td>
 	</tr>
 	<$endif$><$endforeach do$>
 	</table>
@@ -43,7 +43,9 @@
 	<$foreach RelationshipShow noninheritedRelationships do$><$if RelationshipShow.isToMany && RelationshipShow.destinationEntity.hasSpecificCustomClass$>
 	<div id="flash_notice">
 	<h3><%= t :for_this, :children => t('<$RelationshipShow.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
-	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %><%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
+	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %>
+	<%= link_to <$RelationshipShow.name.singularize.underscorize$>.name, :controller => '<$RelationshipShow.name.underscorize$>', 
+	      :id => <$RelationshipShow.name.singularize.underscorize$>.id, :action => 'show' %><br /><% end %></div>
 	<$endif$><$endforeach do$>
 	<% end %>
 <% end %>
