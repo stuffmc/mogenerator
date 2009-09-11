@@ -1,12 +1,16 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
 # Make changes to <$managedObjectClassName$>.rb instead.
-require '<$managedObjectClassName.underscorize$>_human.rb'
+require '_<$managedObjectClassName.underscorize$>.rb'
 
 class <$managedObjectClassName$> < ActiveRecord::Base
 
 	<$foreach Relationship noninheritedRelationships do$><$ if Relationship.destinationEntity.hasSpecificCustomClass$>
 	# attr_accessible :<$Relationship.name.underscorize$><$if Relationship.isToMany$>
+  <$if Relationship.inverseRelationship.isToMany $>
+  has_and_belongs_to_many :<$Relationship.name.underscorize$>
+  <$else$>
 	has_many :<$Relationship.name.underscorize$>	
+  <$endif$>
 	accepts_nested_attributes_for :<$Relationship.name.underscorize$>
   # after_save :save_<$Relationship.name.underscorize$>
 	
@@ -40,11 +44,12 @@ class <$managedObjectClassName$> < ActiveRecord::Base
   #   end
 	<$else$>
 	belongs_to :<$Relationship.name$><$endif$><$endif$><$endforeach do$>
-
-	<$foreach Attribute noninheritedAttributes do$><$if Attribute.isBinaryData $>has_attached_file		:<$Attribute.name.underscorize$>, :styles => {:s320x180 => "320x180>", :s205x160 => '205x160', :s50x50 => "50x50>", :s142x81 => "142x81>"}
-#	validates_attachment_presence	:<$Attribute.name.underscorize$>
-#	validates_attachment_size		:<$Attribute.name.underscorize$>,	:less_than => 100.kilobytes
-	<$endif$><$endforeach do$>	
-	  
-	  
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.isIndexed $>
+  def self.sorted
+    all(:order => "UPPER(<$Attribute.name.underscorize$>)")
+  end
+  	<$endif$><$if Attribute.isBinaryData $>has_attached_file		:<$Attribute.name.underscorize$>, :styles => {:s320x180 => "320x180>", :s205x160 => '205x160', :s50x50 => "50x50>", :s142x81 => "142x81>"}
+  #	validates_attachment_presence	:<$Attribute.name.underscorize$>
+  #	validates_attachment_size		:<$Attribute.name.underscorize$>,	:less_than => 100.kilobytes
+  <$endif$><$endforeach do$>	
 end

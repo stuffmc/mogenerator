@@ -1,0 +1,45 @@
+require 'test_helper'
+
+class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalString$>ControllerTest < ActionController::TestCase
+  test "should get index" do
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:<$managedObjectClassName.underscorize.pluralize$>)
+  end
+
+  test "should get new" do
+    get :new
+    assert_response :success
+  end
+
+  test "should create <$managedObjectClassName.underscorize$>" do
+    assert_difference('<$managedObjectClassName.initialCapitalString$>.count') do
+      post :create, :<$managedObjectClassName.underscorize$> => { }
+    end
+
+    assert_redirected_to <$managedObjectClassName.underscorize$>_path(assigns(:<$managedObjectClassName.underscorize$>))
+  end
+
+  test "should show <$managedObjectClassName.underscorize$>" do
+    get :show, :id => <$managedObjectClassName.underscorize.pluralize$>(:one).to_param
+    assert_response :success
+  end
+
+  test "should get edit" do
+    get :edit, :id => <$managedObjectClassName.underscorize.pluralize$>(:one).to_param
+    assert_response :success
+  end
+
+  test "should update <$managedObjectClassName.underscorize$>" do
+    put :update, :id => <$managedObjectClassName.underscorize.pluralize$>(:one).to_param, :category => { }
+    assert_redirected_to <$managedObjectClassName.underscorize$>_path(assigns(:category))
+  end
+
+  test "should destroy <$managedObjectClassName.underscorize$>" do
+    assert_difference('<$managedObjectClassName.initialCapitalString$>.count', -1) do
+      delete :destroy, :id => <$managedObjectClassName.underscorize.pluralize$>(:one).to_param
+    end
+
+    assert_redirected_to <$managedObjectClassName.underscorize.pluralize$>_path
+  end
+end

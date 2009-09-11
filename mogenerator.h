@@ -72,5 +72,6 @@
 - (NSString*)appSupportFileNamed:(NSString*)fileName_;
 - (NSError*)outputError:(NSError*)error;
 - (BOOL)processEntity:(id)entityModelOrRelationShip forMachine:(MiscMergeEngine*)machine withFileName:(NSString *)fileName;
+- (BOOL)traverseRelationShipsForEntity:(NSEntityDescription *)entity migrate:(MiscMergeEngine *)machineMigrateRB children:(MiscMergeEngine *)machineChildrenRB existing:(MiscMergeEngine *)machineChildrenExistingRB;
 
 @end

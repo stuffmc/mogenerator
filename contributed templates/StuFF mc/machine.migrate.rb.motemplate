@@ -1,4 +1,4 @@
-class Create<$name.underscorize.pluralize.camelize.initialCapitalString$> < ActiveRecord::Migration
+class Create<$name.underscorize.pluralize.camelize.initialCapitalString$><$ if isAbstract $>Join<$ endif $> < ActiveRecord::Migration
   def self.up
     create_table  :<$name.underscorize.pluralize.underscorize$><$ if isAbstract $>, :id => false<$ endif $> do |t|
   		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType && !Attribute.isTimeStamp$>
