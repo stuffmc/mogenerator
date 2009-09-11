@@ -4,6 +4,10 @@
     # fields_for "<$ inverseRelationship.name $>[<$destinationEntity.managedObjectClassName.underscorize$>_attributes][]", <$ 
     # inverseRelationship.name.singularize.underscorize $>_<$destinationEntity.managedObjectClassName.underscorize$> do |<$destinationEntity.managedObjectClassName.underscorize$>_form| 
 
+    - f.fields_for :streams do |stream| 
+      = stream.label :url, "Stream URL", :class => :styled
+      = stream.text_field :url, :class => :styled
+
     f.fields_for :<$destinationEntity.managedObjectClassName.underscorize.pluralize$> do |<$destinationEntity.managedObjectClassName.underscorize.singularize$>| %>
 		<$foreach Attribute destinationEntity.noninheritedAttributes do$><$
 			if !Attribute.isTimeStamp

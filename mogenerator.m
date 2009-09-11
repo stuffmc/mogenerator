@@ -661,19 +661,65 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machinePartialRB		withFileName:@"/_.html.erb"];
 				
+				
+				// TODO: Extract this whole loop in a method!
 //				NSUInteger i = 0;
 //				ddprintf(@"++entity: %@\n", entityClassName);
 				for (NSEntityDescription *oneEntityFromTheModel in [model entities]) {
 //					NSLog(@"%d**one: %@\n", i++, [oneEntityFromTheModel name]);
-					for (NSRelationshipDescription *children in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
-						if ([children isToMany]) {
+					for (NSRelationshipDescription *child in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
+						if ([child isToMany]) {
 //							ddprintf(@"\n*&*&&* children (%@): %@", [children name], [[[entity managedObjectClassName] pluralize] underscorize]);
-							machineDirtied = [self processEntity:children forMachine:machineChildrenRB	
+							machineDirtied = [self processEntity:child forMachine:machineChildrenRB	
 													withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
-							machineDirtied = [self processEntity:children forMachine:machineChildrenExistingRB	
+							machineDirtied = [self processEntity:child forMachine:machineChildrenExistingRB	
 													withFileName:[NSString stringWithFormat:@"/_children_%@_existing", [[[entity managedObjectClassName] pluralize] underscorize]]];
 //							ddprintf(@"\t\t::CHILD: %@\n", [[children destinationEntity] name]);
 //							NSLog(@"---CHILD:\n");
+							if ([[child inverseRelationship] isToMany] && ![[child inverseRelationship] isTransient]) {
+								// We need to create a migration "HABTM" join table in Rails for this "many-to-many" CoreData representation.
+								// The "isTranscient" check is just a way to "mark it as done" since we only need to do the Join Table once.
+								// We might want to use something in the UserInfo of the inverseRelationship instead.
+								
+//								ddprintf(@"*** HABTM *** %@ %@\n%@", [child name], [[child inverseRelationship] name], entity);
+//								ddprintf(@"\n\n\n\n\n\n\n\n\n*** HABTM *** %@\n\n\n", model);
+								
+								for (NSAttributeDescription *property in [entity properties]) {
+									if ([[property validationPredicates] count]) {
+//										ddprintf(@"*** %@\n\n\n", [[[property validationPredicates] objectAtIndex:0] className]);
+									}
+//									if ([attribute isKindOfClass:[NSProperty Description class]]) {
+//										ddprintf(@"*** %@\n\n\n", [((NSPropertyDescription*)attribute) validationPredicates] );
+//									}
+								} 
+								
+//								NSEntityDescription *entityJoin = [[NSEntityDescription entityForName:@"child_parent" inManagedObjectContext:nil] autorelease];
+								NSEntityDescription *entityJoin = [[[NSEntityDescription alloc] init] autorelease];
+								NSString *firstEntityName, *secondEntityName;
+								if ([[child name] isGreaterThan:[[child inverseRelationship] name]]) {
+									firstEntityName = [[child inverseRelationship] name];
+									secondEntityName = [child name];
+								} else {
+									firstEntityName = [child name];
+									secondEntityName = [[child inverseRelationship] name];
+								}
+								
+								[entityJoin setName:[NSString stringWithFormat:@"%@%@", firstEntityName, [[secondEntityName singularize] initialCapitalString]]];
+								[entityJoin setAbstract:YES]; // This "abstract" flag is just a way to mark it as a join table. We might want to use something in the UserInfo later.
+//								ddprintf(@"*** %@\n\n\n", [entityJoin name] );
+								
+								NSAttributeDescription *child_id = [[NSAttributeDescription alloc] init];
+								[child_id setName:[NSString stringWithFormat:@"%@_id", [[child name] singularize]]];
+								[child_id setAttributeType:NSInteger64AttributeType];
+
+								NSAttributeDescription *parent_id = [[NSAttributeDescription alloc] init];
+								[parent_id setAttributeType:NSInteger64AttributeType];
+								[parent_id setName:[NSString stringWithFormat:@"%@_id", [[[child inverseRelationship] name] singularize]]];
+								
+								[entityJoin setProperties:[NSArray arrayWithObjects:child_id, parent_id, nil]];
+								machineDirtied = [self processEntity:entityJoin forMachine:machineMigrateRB		withFileName:@"migrate"];
+								[child setTransient:YES]; // "Marked as done", this way the Join table will only be done once. See comment up.
+							}
 						}
 					}
 				}
@@ -683,7 +729,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineIndexRB		withFileName:@"/index.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineNewRB			withFileName:@"/new.html.erb"];
 				machineDirtied = [self processEntity:entity forMachine:machineShowRB		withFileName:@"/show.html.erb"];
-				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
+//				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
 
 				// TODO: Add other human files, not only the model...
 				NSString *generatedHumanRB = [humanModelRB executeWithObject:entity sender:nil];
@@ -794,7 +840,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
 		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
 		rand(); rand(); rand();
-		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), [entityClassName pluralize]];
+		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@%@.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), 
+					[[[entity name] pluralize] underscorize], ([entity isAbstract]) ? @"_join" : @""];
 	}
 
 	if (machineDirToCreate) {

@@ -18,7 +18,7 @@
   	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass$>
   	<th><b><a href="?order=<$RelationshipSingle.name.underscorize $>"><%= <$RelationshipSingle.name.initialCapitalString$>.human_name %></a></b></th>
   	<$endif$><$endforeach do$>  
-    <th><%= link_to t('updated_at'), "?order=updated_at" %></th>
+    <th><%= link_to <$managedObjectClassName.initialCapitalString$>.human_attribute_name('updated_at'), "?order=updated_at" %></th>
     </tr>
 
 <% @<$managedObjectClassName.pluralize.underscorize$>.each do |<$managedObjectClassName.underscorize$>| %>
