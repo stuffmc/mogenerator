@@ -10,14 +10,14 @@
 <% form_for(@<$managedObjectClassName.underscorize$>) do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$>
+	<$foreach Attribute noninheritedAttributes do$><$ if Attribute.hasOrder $>
   	<tr>
 	  <td style="padding-right: 25px;"><b><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %>:</b></td>
 	  <td class="padding"><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=<$if Attribute.isDate $>l<$else
 	  $><$ if (Attribute.specifiedRailsAttributeType) $>simple_format<$ else $>h<$endif$><$endif$> @<$
 	  managedObjectClassName.underscorize$>.<$Attribute.name.underscorize$><$if Attribute.isDate $>, :format => :short<$endif$> %><$endif$></td>
   	</tr>
-	</p><$endforeach do$>
+	</p><$endif$><$endforeach do$>
 
 	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass$>
   	<tr>

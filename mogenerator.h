@@ -48,6 +48,11 @@
 - (NSString*)objectAttributeType;
 @end
 
+@interface NSPropertyDescription (MOGeneratorAdditions)
+- (BOOL)hasOrder;
+@end
+
+
 @interface NSString (camelCaseString)
 - (NSString*)camelCaseString;
 @end

@@ -21,7 +21,7 @@
 				  <td><%= <$
 				  RelationshipChildren.destinationEntity.managedObjectClassName.initialCapitalString $>.human_name%>: </td><td><%= 
 				  <$destinationEntity.managedObjectClassName.underscorize.singularize$>.collection_select :<$
-				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
+				  RelationshipChildren.name.underscorize$>_id, <$RelationshipChildren.destinationEntity.name.initialCapitalString$>.all, :id, :name, {:prompt => true} %></td>
 				  </tr>
 				  <% end %><$
 			endif$><$

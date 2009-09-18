@@ -324,6 +324,21 @@ NSString	*gCustomBaseClass;
 }
 @end
 
+
+@implementation NSPropertyDescription (MOGeneratorAdditions)
+
+- (BOOL)hasOrder {
+	BOOL returnValue = true;
+	if (self.userInfo && self.userInfo.allKeys && self.userInfo.allKeys.count) {
+//		ddprintf(@"property userInfo: %@", self.userInfo.allKeys);
+		returnValue = false;
+	}
+	return returnValue;
+}
+
+@end
+
+
 @implementation NSString (camelCaseString)
 - (NSString*)camelCaseString {
 	NSArray *lowerCasedWordArray = [[self wordArray] arrayByMakingObjectsPerformSelector:@selector(lowercaseString)];
@@ -655,11 +670,15 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 			[mfileContent appendFormat:@"#include \"%@\"\n#include \"%@\"\n",
                 [humanMFileName lastPathComponent], [machineMFileName lastPathComponent]];
 			
+//			ddprintf(@"BEFORE railsDir");
+
 			if (railsDir) {
 //				ddprintf(@"\nrails machineControllerRB: %@", machineControllerRB);
 				machineDirtied = [self processEntity:entity forMachine:machineControllerRB	withFileName:@"_controller.rb"];
 				machineDirtied = [self processEntity:entity forMachine:machineModelRB		withFileName:@".rb"];
 				machineDirtied = [self processEntity:entity forMachine:machinePartialRB		withFileName:@"/_.html.erb"];
+
+//				ddprintf(@"BEFORE traverseRelationShipsForEntity");
 
 				machineDirtied = [self traverseRelationShipsForEntity:entity migrate:machineMigrateRB children:machineChildrenRB existing:machineChildrenExistingRB];
 				
@@ -715,6 +734,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	for (NSEntityDescription *oneEntityFromTheModel in [model entities]) {
 		for (NSRelationshipDescription *child in [entity relationshipsWithDestinationEntity:oneEntityFromTheModel]) {
 			if ([child isToMany]) {
+//				ddprintf(@"\nPARENT is %@, CHILD is %@\n", [[child inverseRelationship] name], [child name]);
+
 				machineDirtied = [self processEntity:child forMachine:machineChildrenRB	
 										withFileName:[NSString stringWithFormat:@"/_children_%@", [[[entity managedObjectClassName] pluralize] underscorize]]];
 				machineDirtied = [self processEntity:child forMachine:machineChildrenExistingRB	
@@ -723,6 +744,7 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 					// We need to create a migration "HABTM" join table in Rails for this "many-to-many" CoreData representation.
 					// The "isTranscient" check is just a way to "mark it as done" since we only need to do the Join Table once.
 					// We might want to use something in the UserInfo of the inverseRelationship instead.
+					// BTW: We are not using this model to save any data anyways, so we can "misuse" transient, no big deal :-)
 					NSEntityDescription *entityJoin = [[[NSEntityDescription alloc] init] autorelease];
 					NSString *firstEntityName, *secondEntityName;
 					if ([[child name] isGreaterThan:[[child inverseRelationship] name]]) {
@@ -736,13 +758,15 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 					[entityJoin setName:[NSString stringWithFormat:@"%@%@", firstEntityName, [[secondEntityName singularize] initialCapitalString]]];
 					[entityJoin setAbstract:YES]; // This "abstract" flag is just a way to mark it as a join table. We might want to use something in the UserInfo later.
 					
+					
 					NSAttributeDescription *child_id = [[NSAttributeDescription alloc] init];
 					[child_id setName:[NSString stringWithFormat:@"%@_id", [[child name] singularize]]];
 					[child_id setAttributeType:NSInteger64AttributeType];
 					
 					NSAttributeDescription *parent_id = [[NSAttributeDescription alloc] init];
 					[parent_id setAttributeType:NSInteger64AttributeType];
-					[parent_id setName:[NSString stringWithFormat:@"%@_id", [[[child inverseRelationship] name] singularize]]];
+					NSRelationshipDescription *inverse = [child inverseRelationship];
+					[parent_id setName:[NSString stringWithFormat:@"%@_id", ([[inverse destinationEntity] isKindOfEntity:oneEntityFromTheModel]) ? [[oneEntityFromTheModel name] underscorize] : [[[inverse name] singularize] underscorize] ] ];
 					
 					[entityJoin setProperties:[NSArray arrayWithObjects:child_id, parent_id, nil]];
 					machineDirtied = [self processEntity:entityJoin forMachine:machineMigrateRB		withFileName:@"migrate"];

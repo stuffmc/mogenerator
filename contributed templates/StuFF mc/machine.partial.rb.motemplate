@@ -4,7 +4,7 @@
 <% form_for @<$managedObjectClassName.underscorize$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp$>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp && Attribute.hasOrder$>
 	<tr>
 	    <td><%= <$managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= f.<$ 
 	    if (Attribute.specifiedRailsAttributeType) $>text_area<$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.name.underscorize$>, :class => "styled" %></td>
@@ -12,7 +12,7 @@
   	
 	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
 	<tr><td><%= t('<$Relationship.name.underscorize$>', :count => 1)%>: </td><td><%= 
-	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.name.initialCapitalString$>.sorted, :id, :name, {:prompt => true} %></td>
+	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.destinationEntity.name.initialCapitalString$>.sorted, :id, :name, {:prompt => true} %></td>
 	</tr>
 	<$endif$><$endforeach do$>
 	</table>

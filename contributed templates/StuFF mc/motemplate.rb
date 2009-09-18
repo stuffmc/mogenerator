@@ -19,7 +19,12 @@ run "mogenerator  -m '/Volumes/Macintosh HD/Code/SevenSnap/trunk/SevenSnap.xcdat
 
 rake "db:migrate"
 
-plugin "paperclip", :git => "git://github.com/thoughtbot/paperclip.git"
+
+plugin "paperclip", :git => "git://github.com/thoughtbot/paperclip.git" if yes?("Install paperclip?")
+if yes?("Install restful_authentication?")
+  plugin "restful_authentication", :git => "git://github.com/technoweenie/restful_authentication.git"
+  generate :authenticated user sessions --include-activation -s
+end
                     
 git :init
 
