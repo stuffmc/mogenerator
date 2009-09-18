@@ -23,6 +23,8 @@
 @end
 
 @interface NSEntityDescription (customBaseClass)
+- (NSString *)humanName;
+- (NSString *)loginRequiredParameters;
 - (BOOL)hasCustomSuperentity;
 - (BOOL)hasSpecificCustomClass;
 - (NSString*)customSuperentity;
@@ -49,7 +51,11 @@
 @end
 
 @interface NSPropertyDescription (MOGeneratorAdditions)
+- (NSString *)within;
 - (BOOL)hasOrder;
+- (BOOL)hide;
+- (NSString *)fieldName;
+- (NSString *)humanName;
 @end
 
 

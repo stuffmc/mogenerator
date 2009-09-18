@@ -4,13 +4,13 @@
 <% form_for @<$managedObjectClassName.underscorize$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp && Attribute.hasOrder$>
+	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp && !Attribute.hide$>
 	<tr>
 	    <td><%= <$managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= f.<$ 
-	    if (Attribute.specifiedRailsAttributeType) $>text_area<$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.name.underscorize$>, :class => "styled" %></td>
+	    if (Attribute.specifiedRailsAttributeType) $><$ Attribute.specifiedRailsAttributeType $><$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.fieldName.underscorize$>, :class => "styled" %></td>
   	</tr><$endif$><$endforeach do$>
   	
-	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass$>
+	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass && !Relationship.hide$>
 	<tr><td><%= t('<$Relationship.name.underscorize$>', :count => 1)%>: </td><td><%= 
 	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.destinationEntity.name.initialCapitalString$>.sorted, :id, :name, {:prompt => true} %></td>
 	</tr>
@@ -20,7 +20,7 @@
     <%= f.submit yield(:button) %>
   </p>
   	<% if @<$managedObjectClassName.underscorize$>.id == nil %>
-	<$foreach child allToManyRelationships do$>
+	<$foreach child allToManyRelationships do$><$ if !child.hide $>
 	<div id="flash_notice">
 		<h3><%= t :for_this, :children => t('<$child.destinationEntity.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
      <div id="<$child.destinationEntity.name.pluralize.underscorize$>"></div>
@@ -41,9 +41,9 @@
 	<p>
 	<%= f.submit yield(:button) %>
 	</p>
-	<$endforeach do$>
+	<$ endif $><$endforeach do$>
 	<% else  %>
-	<$foreach RelationshipShow noninheritedRelationships do$><$if RelationshipShow.isToMany && RelationshipShow.destinationEntity.hasSpecificCustomClass$>
+	<$foreach RelationshipShow noninheritedRelationships do$><$if RelationshipShow.isToMany && RelationshipShow.destinationEntity.hasSpecificCustomClass && !RelationshipShow.hide$>
 	<div id="flash_notice">
 	<h3><%= t :for_this, :children => t('<$RelationshipShow.name.underscorize.singularize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	<% for <$RelationshipShow.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$RelationshipShow.name.underscorize$> %>

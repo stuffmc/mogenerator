@@ -2,7 +2,7 @@
 # Make changes to <$managedObjectClassName$>_controller.rb instead.
 
 class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalString$>Controller < ApplicationController
-  before_filter :login_required unless self.class != UsersController
+  before_filter :login_required<$loginRequiredParameters$>
   
   # GET /<$managedObjectClassName.underscorize$>
   # GET /<$managedObjectClassName.underscorize$>.xml

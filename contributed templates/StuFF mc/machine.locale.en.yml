@@ -32,8 +32,8 @@ en:
   
   <$foreach Entity entitiesByName do$>
   <$ Entity.name.underscorize $>:
-      one:  "<$ Entity.name $>"
-      other: "<$ Entity.name.underscorize.pluralize.camelize.initialCapitalString.sentencize $>"
+      one:  "<$ Entity.humanName $>"
+      other: "<$ Entity.humanName.underscorize.pluralize.camelize.initialCapitalString.sentencize $>"
   <$endforeach do$>
   
   activerecord:
@@ -42,7 +42,7 @@ en:
       <$Entity.name.underscorize$>: "<$Entity.name.sentencize$>"<$endforeach do$>
 
     attributes:
-      <$foreach Entity entitiesByName do$><$Entity.name.underscorize$>:<$foreach Attribute Entity.noninheritedAttributes do$>
-        <$Attribute.name.underscorize$>: "<$Attribute.name.sentencize.initialCapitalString$>"<$endforeach do$>
+      <$foreach Entity entitiesByName do$><$Entity.humanName.underscorize$>:<$foreach Attribute Entity.noninheritedAttributes do$>
+        <$Attribute.name.underscorize$>: "<$Attribute.humanName.sentencize.initialCapitalString$>"<$endforeach do$>
        
       

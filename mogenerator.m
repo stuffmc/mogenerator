@@ -48,9 +48,26 @@ NSString	*gCustomBaseClass;
 	}
 	return nil;
 }
+
 @end
 
 @implementation NSEntityDescription (customBaseClass)
+
+- (NSString *)humanName {
+	NSString *humanNameInUserInfo = [self.userInfo valueForKey:@"humanName"];
+	return (humanNameInUserInfo) ? humanNameInUserInfo : self.name;
+}
+
+- (NSString *)loginRequiredParameters {
+//	for (id object in [self userInfo]) {
+//		if ([object isEqualToString:@"loginRequiredParameters"]) {
+//			return [[self userInfo] valueForKey:object];
+//		}
+//	}
+//	return nil;
+	return [self.userInfo valueForKey:@"loginRequiredParameters"];
+}
+
 - (BOOL)hasCustomSuperentity {
 	NSEntityDescription *superentity = [self superentity];
 	if (superentity) {
@@ -235,12 +252,12 @@ NSString	*gCustomBaseClass;
 }
 
 - (NSString*)specifiedRailsAttributeType {
-//	ddprintf(@"[[self userInfo] allKeys]: %@", [[self userInfo] allKeys]);
-	NSString *type = nil;
-	if ([[[self userInfo] allKeys] count]) {
-		type = [[[self userInfo] allKeys] objectAtIndex:0];
-	}
-	return type;
+//	NSString *type = nil;
+//	if ([[[self userInfo] allKeys] count]) {
+//		type = [[[self userInfo] allKeys] objectAtIndex:0];
+//	}
+//	return type;
+	return [self.userInfo valueForKey:@"specifiedRailsAttributeType"];
 }
 
 - (NSString*)railsAttributeType {
@@ -327,13 +344,58 @@ NSString	*gCustomBaseClass;
 
 @implementation NSPropertyDescription (MOGeneratorAdditions)
 
-- (BOOL)hasOrder {
-	BOOL returnValue = true;
-	if (self.userInfo && self.userInfo.allKeys && self.userInfo.allKeys.count) {
-//		ddprintf(@"property userInfo: %@", self.userInfo.allKeys);
-		returnValue = false;
+- (NSString *)within {
+	NSString *from = nil, *to = nil, *withinString = nil;
+	
+	for (NSComparisonPredicate *predicate in self.validationPredicates) {
+//		ddprintf(@"**withinString: %@\n", predicate);
+		if ([[NSString stringWithFormat:@"%@", predicate.leftExpression] isEqualToString:@"length"]) {
+			switch (predicate.predicateOperatorType) {
+				case NSGreaterThanOrEqualToComparison:
+					from = [NSString stringWithFormat:@"%@", [predicate rightExpression]];
+					break;
+				case NSLessThanOrEqualToComparison:
+					to = [NSString stringWithFormat:@"%@", [predicate rightExpression]];
+					break;
+				default:
+					break;
+			}
+		}
 	}
-	return returnValue;
+	if (to) {
+		if (!from) {
+			from = @"1";
+		}
+		withinString = [NSString stringWithFormat:@"%@..%@", from, to];
+	} 
+//	ddprintf(@"withinString: %@\n", withinString);
+	return withinString;
+}
+
+- (NSString *)humanName {
+	NSString *humanNameInUserInfo = [self.userInfo valueForKey:@"humanName"];
+	return (humanNameInUserInfo) ? humanNameInUserInfo : self.name;
+}
+
+- (NSString *)fieldName {
+	NSString *fieldNameInUserInfo = [self.userInfo valueForKey:@"fieldName"];
+	return (fieldNameInUserInfo) ? fieldNameInUserInfo : self.name;
+}
+
+
+- (BOOL)hide {
+	return ([self.userInfo valueForKey:@"hide"] != nil);
+}
+
+- (BOOL)hasOrder {
+//	
+//	BOOL returnValue = true;
+//	if (self.userInfo && self.userInfo.allKeys && self.userInfo.allKeys.count) {
+////		ddprintf(@"property userInfo: %@", self.userInfo.allKeys);
+//		returnValue = false;
+//	}
+//	return returnValue;
+	return ([self.userInfo valueForKey:@"order"] == nil);
 }
 
 @end

@@ -10,7 +10,7 @@
 <% form_for(@<$managedObjectClassName.underscorize$>) do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$><$ if Attribute.hasOrder $>
+	<$foreach Attribute noninheritedAttributes do$><$ if Attribute.hide $>
   	<tr>
 	  <td style="padding-right: 25px;"><b><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %>:</b></td>
 	  <td class="padding"><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=<$if Attribute.isDate $>l<$else
@@ -19,7 +19,7 @@
   	</tr>
 	</p><$endif$><$endforeach do$>
 
-	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass$>
+	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass && !RelationshipSingle.hide$>
   	<tr>
 	  <td style="padding-right: 25px;"><b><%= <$RelationshipSingle.name.initialCapitalString$>.human_name %>:</b></td>
 	  <td class="padding"><%=h @<$managedObjectClassName.underscorize$>.<$RelationshipSingle.name.underscorize$>.name rescue nil %></td>
@@ -28,7 +28,7 @@
 	
   	</table>
 	
-	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
+	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany && !Relationship.hide$>
 	<div id="flash_notice">
 	<h3><%= t :for_this, :children => t('<$Relationship.name.singularize.underscorize$>', :count => 2), :parent => t('<$managedObjectClassName.underscorize$>', :count => 1) %></h3>
 	<% for <$Relationship.name.singularize.underscorize$> in @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$> %>
