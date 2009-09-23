@@ -23,6 +23,7 @@ en:
   edit: "Edit"
   destroy: "Delete"
   back: "Back"
+  update: "Update"
   
   was_successfully_created: "{{model}} was successfully created."
   was_successfully_updated: "{{model}} was successfully updated." 
@@ -32,7 +33,7 @@ en:
   
   <$foreach Entity entitiesByName do$>
   <$ Entity.name.underscorize $>:
-      one:  "<$ Entity.humanName $>"
+      one:  "<$ Entity.humanName.sentencize $>"
       other: "<$ Entity.humanName.underscorize.pluralize.camelize.initialCapitalString.sentencize $>"
   <$endforeach do$>
   

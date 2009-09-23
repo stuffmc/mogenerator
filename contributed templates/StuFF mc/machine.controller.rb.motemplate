@@ -1,5 +1,6 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
 # Make changes to <$managedObjectClassName$>_controller.rb instead.
+<$if require $>require '_<$managedObjectClassName.underscorize.pluralize$>_controller.rb'<$endif$>
 
 class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalString$>Controller < ApplicationController
   before_filter :login_required<$loginRequiredParameters$>
@@ -35,8 +36,7 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
   def new
     @<$managedObjectClassName.underscorize$> = <$managedObjectClassName$>.new
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-    @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build
-  <$endif$><$endforeach do$>
+    @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build unless @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.blank? <$endif$><$endforeach do$>
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }
@@ -55,8 +55,11 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
 
     respond_to do |format|
       if @<$managedObjectClassName.underscorize$>.save
+        <$ if mailer 
+        $><$managedObjectClassName$>Mailer.deliver_create(@<$managedObjectClassName.underscorize$>)<$endif$>
         flash[:notice] = t :was_successfully_created, :model => t('<$managedObjectClassName.underscorize$>', :count => 1)
-        format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
+        format.html { render :action => "show" #redirect_to(@<$managedObjectClassName.underscorize$>) 
+                    }
         format.xml  { render :xml => @<$managedObjectClassName.underscorize$>, :status => :created, :location => @<$managedObjectClassName.underscorize$> }
       else
         format.html { render :action => "new" }

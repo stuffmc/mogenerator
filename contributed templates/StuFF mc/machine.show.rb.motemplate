@@ -1,16 +1,16 @@
 <% # WARNING: This file was machine-generated and might be overwritten. %>
 <%=h content_for(:title, t('<$managedObjectClassName.underscorize$>', :count => 1)) %>
-<h1><%= yield(:title) %></h1>
-<div class="menu">
+<% if current_user && current_user.admin? 
+  %><h1><%= yield(:title) %></h1><div class="menu">
   <%= link_to t('back'), :controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index' %> | 
   <%= link_to t('edit'), :controller => '<$managedObjectClassName.underscorize.pluralize$>', :id => @<$managedObjectClassName.lowercaseString$>, :action => 'edit' %> |
   <%= link_to t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)), new_<$managedObjectClassName.underscorize$>_path %>
 </div>
-
+<% end %>
 <% form_for(@<$managedObjectClassName.underscorize$>) do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$><$ if Attribute.hide $>
+	<$foreach Attribute propertiesSorted do$><$ if Attribute.isAttribute && !Attribute.hide && !Attribute.hideOnShow $>
   	<tr>
 	  <td style="padding-right: 25px;"><b><%= <$managedObjectClassName.initialCapitalString$>.human_attribute_name('<$Attribute.name.underscorize$>') %>:</b></td>
 	  <td class="padding"><$if Attribute.isBinaryData $><%= image_tag @<$managedObjectClassName.lowercaseString$>.<$Attribute.name.underscorize$>.url %><$else$><%=<$if Attribute.isDate $>l<$else
@@ -22,7 +22,7 @@
 	<$foreach RelationshipSingle noninheritedRelationships do$><$if !RelationshipSingle.isToMany && RelationshipSingle.destinationEntity.hasSpecificCustomClass && !RelationshipSingle.hide$>
   	<tr>
 	  <td style="padding-right: 25px;"><b><%= <$RelationshipSingle.name.initialCapitalString$>.human_name %>:</b></td>
-	  <td class="padding"><%=h @<$managedObjectClassName.underscorize$>.<$RelationshipSingle.name.underscorize$>.name rescue nil %></td>
+	  <td class="padding"><%=h @<$managedObjectClassName.underscorize$>.<$RelationshipSingle.name.underscorize$>.<$RelationshipSingle.destinationEntity.index.underscorize$> rescue nil %></td>
   	</tr>
 	<$endif$><$endforeach do$>
 	

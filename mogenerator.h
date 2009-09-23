@@ -23,6 +23,11 @@
 @end
 
 @interface NSEntityDescription (customBaseClass)
+- (BOOL)mailer;
+- (NSArray*)propertiesSorted;
+- (NSPropertyDescription *)propertyForMenuOrder:(NSUInteger)menuOrder;
+- (NSString *)index;
+- (NSString *)require;
 - (NSString *)humanName;
 - (NSString *)loginRequiredParameters;
 - (BOOL)hasCustomSuperentity;
@@ -34,6 +39,7 @@
 @end
 
 @interface NSAttributeDescription (scalarAttributeType)
+- (BOOL)isNumeric;
 - (BOOL)isTimeStamp;
 - (BOOL)isUpdatedAt;
 - (BOOL)isCreatedAt;
@@ -51,9 +57,12 @@
 @end
 
 @interface NSPropertyDescription (MOGeneratorAdditions)
+- (BOOL)isAttribute;
 - (NSString *)within;
+- (NSString *)maxLength;
 - (BOOL)hasOrder;
 - (BOOL)hide;
+- (BOOL)hideOnShow;
 - (NSString *)fieldName;
 - (NSString *)humanName;
 @end

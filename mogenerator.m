@@ -53,6 +53,72 @@ NSString	*gCustomBaseClass;
 
 @implementation NSEntityDescription (customBaseClass)
 
+- (BOOL)mailer {
+	return [[self userInfo] valueForKey:@"Mailer"] != nil;
+}
+
+- (NSArray*)propertiesSorted {
+	NSMutableArray *sorted = [[NSMutableArray alloc] init];
+//	if ([[self name] isEqualToString:@"User"]) {
+	NSUInteger count = [[self properties] count];
+	//	ddprintf(@"**** entity count: %d\n\n", count);
+	for (NSUInteger index = 0 ; index < count ; index++) {
+		//		ddprintf(@"**** index: %d\n\n", index);
+		NSPropertyDescription *propertySorted = [self propertyForMenuOrder:index];
+		if (propertySorted) {
+			[sorted addObject:propertySorted];
+		}
+	}
+		
+	//	ddprintf(@"***allKeys: %@", [[self entitiesByName] allKeys]);
+//	ddprintf(@"*** NO ORDER ***********");
+//	for (NSUInteger index = 0 ; index < count ; index++) {
+//		//		ddprintf(@"**** index: %d\n\n", index);
+//		if (![self propertyForMenuOrder:index]) {
+//			[sorted addObject:[[self properties] objectAtIndex:index]];
+//		}
+//	}
+	//	ddprintf(@"**** sorted: %@\n\n", sorted);
+		
+	for (NSPropertyDescription *property in [self properties]) {
+		if (![[property userInfo] valueForKey:@"order"]) {
+			[sorted addObject:property];
+		} 
+	}
+//	}
+	return sorted;
+}
+
+- (NSPropertyDescription *)propertyForMenuOrder:(NSUInteger)menuOrder {
+	for (NSPropertyDescription *property in [self properties]) {
+//			ddprintf(@"**** order: %d\n\n", menuOrder);
+//			ddprintf(@"**** allValues: %@\n\n", [[property userInfo] allValues]);
+			//		ddprintf(@"**** VALUE: %@\n\n", [[[property userInfo] allValues] objectAtIndex:0]);
+		if ([[[property userInfo] valueForKey:@"order"] intValue] == menuOrder + 1) {
+			return property;
+		} 
+//		NSArray *allValues = [[property userInfo] allValues];
+//		if (allValues && [allValues count] && [[allValues objectAtIndex:0] intValue] == menuOrder + 1) {
+//			//			ddprintf(@"**** entity: %@\n\n", entity.name);
+//			return entity;
+//		}
+	}
+	return nil;
+}
+
+- (NSString *)index {
+	for (NSPropertyDescription *property in [self properties]) {
+		if ([property isKindOfClass:[NSAttributeDescription class]] && [property isIndexed]) {
+			return property.name;
+		}
+	}
+	return @"name";
+}
+
+- (NSString *)require {
+	return [self.userInfo valueForKey:@"require"];	
+}
+
 - (NSString *)humanName {
 	NSString *humanNameInUserInfo = [self.userInfo valueForKey:@"humanName"];
 	return (humanNameInUserInfo) ? humanNameInUserInfo : self.name;
@@ -260,6 +326,21 @@ NSString	*gCustomBaseClass;
 	return [self.userInfo valueForKey:@"specifiedRailsAttributeType"];
 }
 
+- (BOOL)isNumeric {
+	switch ([self attributeType]) {
+		case NSInteger16AttributeType:
+		case NSInteger32AttributeType:
+		case NSInteger64AttributeType:
+		case NSDoubleAttributeType:
+		case NSDecimalAttributeType:
+			return true;
+			break;
+		
+		default:
+			return false;
+	}
+}
+
 - (NSString*)railsAttributeType {
 	switch ([self attributeType]) {
 		case NSInteger16AttributeType:
@@ -344,6 +425,10 @@ NSString	*gCustomBaseClass;
 
 @implementation NSPropertyDescription (MOGeneratorAdditions)
 
+- (BOOL)isAttribute {
+	return [self isKindOfClass:[NSAttributeDescription class]];
+}
+
 - (NSString *)within {
 	NSString *from = nil, *to = nil, *withinString = nil;
 	
@@ -372,6 +457,38 @@ NSString	*gCustomBaseClass;
 	return withinString;
 }
 
+- (NSString *)maxLength {
+	NSString *to = nil;
+	
+	for (NSComparisonPredicate *predicate in self.validationPredicates) {
+		//		ddprintf(@"**withinString: %@\n", predicate);
+		if ([[NSString stringWithFormat:@"%@", predicate.leftExpression] isEqualToString:@"length"]) {
+			switch (predicate.predicateOperatorType) {
+				case NSLessThanOrEqualToComparison:
+					to = [NSString stringWithFormat:@"%@", [predicate rightExpression]];
+					break;
+				default:
+					break;
+			}
+		}
+		
+		if ([[NSString stringWithFormat:@"%@", predicate.leftExpression] isEqualToString:@"SELF"]) {
+			switch (predicate.predicateOperatorType) {
+				case NSLessThanOrEqualToComparison:
+				{
+					NSString *expression = [NSString stringWithFormat:@"%@", [predicate rightExpression]];
+					to = [NSString stringWithFormat:@"%d", [expression length]];
+					break;
+				}
+				default:
+					break;
+			}
+		}
+		
+	}
+	return to;
+}
+
 - (NSString *)humanName {
 	NSString *humanNameInUserInfo = [self.userInfo valueForKey:@"humanName"];
 	return (humanNameInUserInfo) ? humanNameInUserInfo : self.name;
@@ -386,6 +503,11 @@ NSString	*gCustomBaseClass;
 - (BOOL)hide {
 	return ([self.userInfo valueForKey:@"hide"] != nil);
 }
+
+- (BOOL)hideOnShow {
+	return ([[self.userInfo valueForKey:@"specifiedRailsAttributeType"] isEqualToString:@"password_field"]);
+}
+
 
 - (BOOL)hasOrder {
 //	
@@ -751,18 +873,18 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 				machineDirtied = [self processEntity:entity forMachine:machineMigrateRB		withFileName:@"migrate"];
 
 				// TODO: Add other human files, not only the model...
-				NSString *generatedHumanRB = [humanModelRB executeWithObject:entity sender:nil];
-				NSString *humanRBFileName = [machineDirRB stringByAppendingPathComponent:
-											 [NSString stringWithFormat:@"models/_%@.rb", [entityClassName underscorize]]];
-				if ([fm regularFileExistsAtPath:humanRBFileName]) {
-					if (machineDirtied)
-						[fm touchPath:humanRBFileName];
-				} else {
-					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
-					if (![self outputError:error]) {
-						humanFilesGenerated++;
-					}
-				}
+//				NSString *generatedHumanRB = [humanModelRB executeWithObject:entity sender:nil];
+//				NSString *humanRBFileName = [machineDirRB stringByAppendingPathComponent:
+//											 [NSString stringWithFormat:@"models/_%@.rb", [entityClassName underscorize]]];
+//				if ([fm regularFileExistsAtPath:humanRBFileName]) {
+//					if (machineDirtied)
+//						[fm touchPath:humanRBFileName];
+//				} else {
+//					[generatedHumanRB writeToFile:humanRBFileName atomically:NO encoding:NSUTF8StringEncoding error:&error];
+//					if (![self outputError:error]) {
+//						humanFilesGenerated++;
+//					}
+//				}
 				
 			}
 		} 

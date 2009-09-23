@@ -9,11 +9,14 @@
   </head>
   <body>
     <div id="container">
-<div class="logo"><div id="menu"><strong>&nbsp;<%= t 'admin.title' %> | <%= link_to "Logout", "/logout" unless !logged_in? %><%= link_to "Register", "/register" unless logged_in? %></strong><br />
+<div class="logo">    <% if current_user && current_user.admin? 
+      %><div id="menu"><strong>&nbsp;<%= t 'admin.title' %> | <%= link_to "Logout", "/logout" unless !logged_in? %><%= link_to "Register", "/register" unless logged_in? %></strong><br />
      | <$foreach Entity entitiesSorted do$><$ if Entity.hasSpecificCustomClass 
 		$><%= link_to t('<$Entity.name.underscorize$>', :count => 2), <$Entity.name.underscorize.pluralize$>_path %> [<%= link_to "+", new_<$
 			Entity.name.underscorize$>_path %>]
-			 | <$ endif $><$endforeach do$></div></div>
+			 | <$ endif $><$endforeach do$></div>
+		<% end %>	   
+			   </div>
       <%- flash.each do |name, msg| -%>
         <%= content_tag :div, msg, :id => "flash_#{name}" %>
       <%- end -%>

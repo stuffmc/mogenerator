@@ -15,7 +15,7 @@ generate :nifty_layout
 # ====================================================================================================================================================================
 
 #run "mogenerator  -m '../iPhone/SK.xcdatamodeld/SK 5.xcdatamodel' -H ../iPhone/Models/Human -M ../iPhone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
-run "mogenerator  -m '/Volumes/Macintosh HD/Code/SevenSnap/trunk/SevenSnap.xcdatamodel' -H ../Models/Human -M ../Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
+run "mogenerator  -m ../7siphone/7S.xcdatamodel -H ../7siphone/Models/Human -M ../7siphone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
 
 rake "db:migrate"
 

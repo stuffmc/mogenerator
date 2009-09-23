@@ -2,9 +2,9 @@
 <%=h content_for(:title, t('new', :model => t('<$managedObjectClassName.underscorize$>', :count => 1))) %>
 <% partial_button t('create', :model => t('<$managedObjectClassName.underscorize$>', :count => 1)) %>
 
-<h1><%= yield(:title) %></h1>
-<div class="menu">
+<% if current_user && current_user.admin? 
+  %><h1><%= yield(:title) %></h1><div class="menu">
   <%= link_to t('back'), :controller => '<$managedObjectClassName.lowercaseString.pluralize$>', :action => 'index' %>
 </div>
-
+<% end %>
 <%= render :partial => @<$managedObjectClassName.underscorize$> %>

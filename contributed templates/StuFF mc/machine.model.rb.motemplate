@@ -1,6 +1,6 @@
 # DO NOT EDIT. This file is machine-generated and constantly overwritten.
-# Make changes to <$managedObjectClassName$>.rb instead.
-require '_<$managedObjectClassName.underscorize$>.rb'
+# Make changes to _<$managedObjectClassName.underscorize$>.rb instead.
+<$if require $>require '<$require $>'<$endif$>
 
 class <$managedObjectClassName$> < ActiveRecord::Base
 
@@ -16,7 +16,8 @@ class <$managedObjectClassName$> < ActiveRecord::Base
 	<$else$>
 	belongs_to :<$Relationship.name$><$endif$><$endif$>
 	<$endforeach do$>
-	<$foreach Attribute noninheritedAttributes do$><$ if Attribute.within $>validates_length_of       :<$Attribute.fieldName.underscorize$>,    :within => <$ Attribute.within $>
+	<$foreach Attribute noninheritedAttributes do$><$ if !Attribute.isOptional && Attribute.isNumeric $>validates_numericality_of :<$Attribute.fieldName.underscorize$>, :on => :create
+  <$endif$><$ if Attribute.within $>validates_length_of       :<$Attribute.fieldName.underscorize$>,    :within => <$ Attribute.within $>
 	<$endif$><$if Attribute.isIndexed 
 	$>def self.sorted
     all(:order => "UPPER(<$Attribute.name.underscorize$>)")

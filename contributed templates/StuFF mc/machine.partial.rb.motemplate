@@ -4,15 +4,15 @@
 <% form_for @<$managedObjectClassName.underscorize$>, :html => { :multipart => true } do |f| %>
   <%= f.error_messages %>
   	<table>
-	<$foreach Attribute noninheritedAttributes do$><$if !Attribute.isTimeStamp && !Attribute.hide$>
+	<$foreach Attribute propertiesSorted do$><$if Attribute.isAttribute && !Attribute.isTimeStamp && !Attribute.hide$>
 	<tr>
 	    <td><%= <$managedObjectClassName.initialCapitalString $>.human_attribute_name('<$ Attribute.name.underscorize $>')%>: </td><td><%= f.<$ 
-	    if (Attribute.specifiedRailsAttributeType) $><$ Attribute.specifiedRailsAttributeType $><$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.fieldName.underscorize$>, :class => "styled" %></td>
+	    if (Attribute.specifiedRailsAttributeType) $><$ Attribute.specifiedRailsAttributeType $><$ else $><$Attribute.railsHTMLFormType$><$ endif $> :<$Attribute.fieldName.underscorize$>, :class => "styled" <$ if Attribute.maxLength $>, :maxlength => <$ Attribute.maxLength $><$endif$> %></td>
   	</tr><$endif$><$endforeach do$>
   	
 	<$foreach Relationship noninheritedRelationships do$><$if !Relationship.isToMany && Relationship.destinationEntity.hasSpecificCustomClass && !Relationship.hide$>
 	<tr><td><%= t('<$Relationship.name.underscorize$>', :count => 1)%>: </td><td><%= 
-	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.destinationEntity.name.initialCapitalString$>.sorted, :id, :name, {:prompt => true} %></td>
+	f.collection_select :<$Relationship.name.underscorize$>_id, <$Relationship.destinationEntity.name.initialCapitalString$>.sorted, :id, :<$Relationship.destinationEntity.index.underscorize$>, {:prompt => true} %></td>
 	</tr>
 	<$endif$><$endforeach do$>
 	</table>
@@ -28,7 +28,7 @@
 		<$managedObjectClassName.underscorize.pluralize$> = <$child.destinationEntity.name.initialCapitalString
 		$>.<$if child.inverseRelationship.isToMany 
 		  $>all(:conditions => ['<$managedObjectClassName.underscorize.pluralize$>.id is ?', nil], :include => :<$managedObjectClassName.underscorize.pluralize$>)<$
-	  else$>find_by_<$managedObjectClassName.underscorize$>_id(nil)<$
+	  else$>find_all_by_<$managedObjectClassName.underscorize$>_id(nil)<$
 	  endif$>
 		if <$managedObjectClassName.underscorize.pluralize$> %> <%= link_to_function t("existing") do |page|
 			page.insert_html :bottom, :<$child.destinationEntity.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$child.destinationEntity.name.underscorize
