@@ -32,10 +32,10 @@
 	  endif$>
 		if <$managedObjectClassName.underscorize.pluralize$> %> <%= link_to_function t("existing") do |page|
 			page.insert_html :bottom, :<$child.destinationEntity.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.pluralize.underscorize$>_existing_<$child.destinationEntity.name.underscorize
-			              $>', :object => <$child.name.initialCapitalString.singularize$>.new, :locals => { :<$managedObjectClassName.underscorize.pluralize$> => <$managedObjectClassName.underscorize.pluralize$> }
+			              $>', :object => <$child.destinationEntity.name.initialCapitalString.singularize$>.new, :locals => { :<$managedObjectClassName.underscorize.pluralize$> => <$managedObjectClassName.underscorize.pluralize$> }
 		end %> <%= t :or %> <% end %><%= link_to_function t('new', :model => t('<$child.name.underscorize.singularize$>', :count => 1)) do |page|
 				page.insert_html :bottom, :<$child.name.pluralize.underscorize$>, :partial => '<$managedObjectClassName.underscorize$>_<$child.name.underscorize.singularize$>', 
-				:object => <$child.name.initialCapitalString.singularize$>.new, :locals => { :f => f }
+				:object => <$child.destinationEntity.name.initialCapitalString.singularize$>.new, :locals => { :f => f }
 			end %>
 	</div>
 	<p>

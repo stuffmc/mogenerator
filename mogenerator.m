@@ -1009,15 +1009,16 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
 	}
 	if ([fileName isEqualToString:@"migrate"]) {
 		machineDirToCreate = [[railsDir stringByAppendingPathComponent:@"db"] stringByAppendingPathComponent:@"migrate"];
-		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
+//		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate date]];
+		NSDateComponents *dc = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit  fromDate:[NSDate date]];
 		rand(); rand(); rand();
+//		ddprintf(@"dc: %@ \n",  dc);
+//		ddprintf(@"dc seconds: %02d \n",  [dc second]);
+//		fileName = [NSString stringWithFormat:@"%d%02d%02d%02d%02d%02d_create_%@%@.rb", [dc year], [dc month], [dc day], [dc hour], [dc minute], [dc second], 
+//					[[[entity name] underscorize] pluralize], ([entity isAbstract]) ? @"_join" : @""];
 		fileName = [NSString stringWithFormat:@"%d%02d%02d%.0f_create_%@%@.rb", [dc year], [dc month], [dc day], round(rand()/(double)(RAND_MAX)*1000000), 
 					[[[entity name] underscorize] pluralize], ([entity isAbstract]) ? @"_join" : @""];
-//		if ([entityClassName hasPrefix:@"user_stat"]) {
-//			ddprintf(@"[entity name]: %@ \n",  [entity name]);
-//			ddprintf(@"=== directoryEntity: %@ \n",  directoryEntity);
-//			ddprintf(@"=== fileName: %@\n", fileName);
-//		}
+//		ddprintf(@"filename: %@ \n",  fileName);
 	}
 
 	if (machineDirToCreate) {

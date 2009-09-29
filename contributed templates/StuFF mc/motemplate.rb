@@ -14,7 +14,7 @@ generate :nifty_layout
 # = Only exception: -R in this case works well with just "." since it's the current directory :-)
 # ====================================================================================================================================================================
 
-#run "mogenerator  -m '../iPhone/SK.xcdatamodeld/SK 5.xcdatamodel' -H ../iPhone/Models/Human -M ../iPhone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
+#run "mogenerator  -m '../zsiphone/SK.xcdatamodeld/SK 5.xcdatamodel' -H ../zsiphone/Models/Human -M ../zsiphone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
 run "mogenerator  -m ../7siphone/7S.xcdatamodel -H ../7siphone/Models/Human -M ../7siphone/Models/Machine -template-path '/Volumes/Macintosh HD/Code/Open Source/mogenerator/contributed templates/StuFF mc' -R ."
 
 rake "db:migrate"

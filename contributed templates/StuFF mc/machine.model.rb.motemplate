@@ -14,7 +14,7 @@ class <$managedObjectClassName$> < ActiveRecord::Base
   $>accepts_nested_attributes_for :<$Relationship.name.underscorize$>
 
 	<$else$>
-	belongs_to :<$Relationship.name$><$endif$><$endif$>
+	belongs_to :<$Relationship.name.underscorize$><$endif$><$endif$>
 	<$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$ if !Attribute.isOptional && Attribute.isNumeric $>validates_numericality_of :<$Attribute.fieldName.underscorize$>, :on => :create
   <$endif$><$ if Attribute.within $>validates_length_of       :<$Attribute.fieldName.underscorize$>,    :within => <$ Attribute.within $>

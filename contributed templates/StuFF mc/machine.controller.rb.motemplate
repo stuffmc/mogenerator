@@ -16,7 +16,8 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.underscorize$>s }
+      format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$>s }
+      format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
     end
   end
 
@@ -27,7 +28,8 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }
+      format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$> }
+      format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
     end
   end
 
@@ -39,7 +41,8 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
     @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.build unless @<$managedObjectClassName.underscorize$>.<$Relationship.name.underscorize$>.blank? <$endif$><$endforeach do$>
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @<$managedObjectClassName.underscorize$> }
+      format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$> }
+      format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
     end
   end
 
@@ -60,10 +63,12 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
         flash[:notice] = t :was_successfully_created, :model => t('<$managedObjectClassName.underscorize$>', :count => 1)
         format.html { render :action => "show" #redirect_to(@<$managedObjectClassName.underscorize$>) 
                     }
-        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>, :status => :created, :location => @<$managedObjectClassName.underscorize$> }
+        format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$>, :status => :created, :location => @<$managedObjectClassName.underscorize$> }
+        format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$>.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
       end
     end
   end
@@ -78,9 +83,11 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
         flash[:notice] = t :was_successfully_updated, :model => t('<$managedObjectClassName.underscorize$>', :count => 1)
         format.html { redirect_to(@<$managedObjectClassName.underscorize$>) }
         format.xml  { head :ok }
+        format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @<$managedObjectClassName.underscorize$>.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @<$managedObjectClassName.pluralize.underscorize$>.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
       end
     end
   end
@@ -94,6 +101,7 @@ class <$managedObjectClassName.underscorize.pluralize.camelize.initialCapitalStr
     respond_to do |format|
       format.html { redirect_to(:controller => '<$managedObjectClassName.underscorize.pluralize$>', :action => 'index') }
       format.xml  { head :ok }
+      format.json  { render :json => @<$managedObjectClassName.pluralize.underscorize$>s }
     end
   end
 end
